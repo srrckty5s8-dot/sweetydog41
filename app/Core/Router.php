@@ -57,8 +57,11 @@ class Router
 
         $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';
 
-        // Retirer le basePath /Sweetydog/public
+        // Retirer le basePath /Sweetydog/public (ou /Sweetydog)
         $scriptDir = str_replace('\\', '/', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
+        if ($scriptDir !== '' && substr($scriptDir, -7) === '/public') {
+            $scriptDir = substr($scriptDir, 0, -7);
+        }
         if ($scriptDir && $scriptDir !== '/' && strpos($url, $scriptDir) === 0) {
             $url = substr($url, strlen($scriptDir));
         }
@@ -158,7 +161,7 @@ class Router
 
     /**
      * Helper route() : génère l'URL à partir du pattern routes.php
-     * Ex: route('animals.tracking', ['id'=>3]) -> /Sweetydog/public/animals/3/tracking
+     * Ex: route('animals.tracking', ['id'=>3]) -> /Sweetydog/animals/3/tracking
      */
     public function route($name, $params = [])
     {
@@ -181,8 +184,11 @@ class Router
             throw new Exception("Paramètres manquants pour la route $name: $url");
         }
 
-        // Préfixe basePath (/Sweetydog/public)
+        // Préfixe basePath (/Sweetydog)
         $basePath = str_replace('\\', '/', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
+        if ($basePath !== '' && substr($basePath, -7) === '/public') {
+            $basePath = substr($basePath, 0, -7);
+        }
         if ($basePath && $basePath !== '/') {
             return $basePath . $url;
         }

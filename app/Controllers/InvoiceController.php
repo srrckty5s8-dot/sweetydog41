@@ -50,8 +50,7 @@ class InvoiceController extends Controller
         $dompdf = new Dompdf($options);
 
         ob_start();
-        // ⚠️ ta vue facture est encore en legacy ? on la déplacera après
-        include __DIR__ . '/../../views/facture_view.php';
+        include __DIR__ . '/../Views/facture_view.php';
         $html = ob_get_clean();
 
         $dompdf->loadHtml($html);

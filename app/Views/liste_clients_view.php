@@ -368,7 +368,11 @@ foreach ($clients as $c) {
         <div class="brand"><h2>🐾 SweetyDog</h2></div>
         <div class="top-nav">
             <a href="<?= htmlspecialchars(route('appointments.index')) ?>">📅 Agenda</a>
+
+            <a href="<?= htmlspecialchars(route('settings.index')) ?>">⚙️ Paramètres</a>
+
             <a href="parametres.php">⚙️ Paramètres</a>
+main
             <a href="<?= route('logout') ?>" style="color: #e63946;">❌ Quitter</a>
         </div>
     </div>

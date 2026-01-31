@@ -69,13 +69,18 @@ function route($name, $params = [])
  * <link rel="stylesheet" href="<?php echo url('assets/style.css'); ?>">
  * 
  * @param string $path - Chemin relatif (ex: 'assets/style.css')
- * @return string      - URL absolue (ex: '/Sweetydog/public/assets/style.css')
+ * @return string      - URL absolue (ex: '/Sweetydog/assets/style.css')
  */
 function url($path = '')
 {
     // Récupérer le dossier contenant index.php
-    $scriptPath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+    $scriptPath = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/');
     
+    // Retirer /public si l'app est servie depuis ce dossier
+    if ($scriptPath !== '' && substr($scriptPath, -7) === '/public') {
+        $scriptPath = substr($scriptPath, 0, -7);
+    }
+
     // Ne pas ajouter le basePath si on est à la racine
     $basePath = $scriptPath !== '/' ? $scriptPath : '';
     

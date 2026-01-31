@@ -1,8 +1,13 @@
-<?php
-
-
-// Compatibilité legacy : charger la vue MVC déplacée.
-require_once __DIR__ . '/../app/Views/modifier_client_view.php';
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Modifier client</title>
+  <link rel="stylesheet" href="/sweetydog/assets/style.css">
+</head>
+<body>
+<div class="container">
+  <h2>✏️ Modifier le client</h2>
 
   <form action="<?= route('clients.update', ['id' => $proprio['id_proprietaire']]) ?>" method="POST">
     <input type="hidden" name="id_proprietaire" value="<?= (int)$proprio['id_proprietaire'] ?>">
@@ -38,4 +43,3 @@ require_once __DIR__ . '/../app/Views/modifier_client_view.php';
 </div>
 </body>
 </html>
-main

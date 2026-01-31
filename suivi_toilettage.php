@@ -1,7 +1,15 @@
 <?php
 
-session_start();
-require_once 'config/db.php';
+// Compatibilité legacy : rediriger vers la route MVC de suivi.
+$idAnimal = $_GET['id'] ?? null;
+
+
+$scriptPath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+$basePath = $scriptPath !== '/' ? $scriptPath : '';
+
+if ($idAnimal) {
+    header('Location: ' . $basePath . '/animals/' . urlencode($idAnimal) . '/tracking');
+    exit;
 
 if (!isset($_SESSION['admin_connecte']) || $_SESSION['admin_connecte'] !== true) {
     header('Location: index.php');
@@ -44,7 +52,8 @@ if (isset($_GET['success']) && $_GET['success'] == 1 && !empty($historique)) {
     if (file_exists(__DIR__ . '/factures/' . $nomFichierPDF)) {
         $download_link = 'factures/' . $nomFichierPDF;
     }
+main
 }
 
-// APPEL DE LA VUE
-include 'views/suivi_toilettage_view.php';
+header('Location: ' . $basePath . '/clients');
+exit;

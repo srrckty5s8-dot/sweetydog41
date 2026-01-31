@@ -47,24 +47,15 @@ class Controller
 {
     extract($data);
 
-    // ✅ Nouveau dossier MVC : app/Views
-    $newPath = __DIR__ . '/../Views/' . $view . '.php';
+    $path = __DIR__ . '/../Views/' . $view . '.php';
 
-    // ✅ Ancien dossier legacy : views (à la racine)
-    $oldPath = __DIR__ . '/../../views/' . $view . '.php';
-
-    if (file_exists($newPath)) {
-        require $newPath;
-        return;
-    }
-
-    if (file_exists($oldPath)) {
-        require $oldPath;
+    if (file_exists($path)) {
+        require $path;
         return;
     }
 
     http_response_code(500);
-    die("Vue introuvable : $newPath (ou $oldPath)");
+    die("Vue introuvable : $path");
 }
 
 
@@ -92,8 +83,7 @@ class Controller
         if (!isset($_SESSION['admin_connecte'])) {
             // L'utilisateur n'est pas connecté, le rediriger vers le login
             // À améliorer : utiliser redirect('login') au lieu d'une URL hard-codée
-            header('Location: index.php');
-            exit;
+            redirect('login');
         }
     }
 }

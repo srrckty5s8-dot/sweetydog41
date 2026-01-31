@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion | SweetyDog</title>
-    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="<?= htmlspecialchars(url('assets/style.css')) ?>">
     <style>
         :root {
             --vert-fonce: #1b4332;
@@ -129,7 +129,7 @@
         </div>
     <?php endif; ?>
 
-    <form action="index.php" method="POST">
+    <form action="<?= htmlspecialchars(route('login')) ?>" method="POST">
         <div class="form-group">
             <label for="identifiant">Identifiant</label>
             <input type="text" id="identifiant" name="identifiant" placeholder="Ex: admin" required autofocus>

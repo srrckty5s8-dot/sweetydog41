@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Paramètres | SweetyDog</title>
-    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="<?= htmlspecialchars(url('assets/style.css')) ?>">
 </head>
 <body>
 
 <div class="container-large">
     <div class="header-flex" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2>⚙️ Paramètres du compte</h2>
-        <a href="liste_clients.php" class="btn-edit" style="text-decoration: none; background:#eee; color:#333;">← Retour</a>
+        <a href="<?= htmlspecialchars(route('clients.index')) ?>" class="btn-edit" style="text-decoration: none; background:#eee; color:#333;">← Retour</a>
     </div>
 
     <div class="container" style="max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
@@ -24,7 +24,7 @@
             <p style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px;"><?php echo $erreur; ?></p>
         <?php endif; ?>
 
-        <form action="parametres.php" method="POST">
+        <form action="<?= htmlspecialchars(route('settings.index')) ?>" method="POST">
             <div style="margin-bottom: 15px;">
                 <label>Ancien mot de passe</label>
                 <input type="password" name="ancien_mdp" required style="width:100%; padding:10px; margin-top:5px; border:1px solid #ddd; border-radius:6px;">

@@ -141,7 +141,7 @@ return [
      * Page des paramètres/configuration
      * Permet de configurer les paramètres de l'application
      */
-    ['name' => 'settings.index', 'method' => 'GET', 'action' => 'SettingsController@index', 'pattern' => '/settings'],
+    ['name' => 'settings.index', 'method' => 'GET|POST', 'action' => 'SettingsController@index', 'pattern' => '/settings'],
 
     ['name' => 'invoices.generate', 'method' => 'GET', 'action' => 'InvoiceController@generate', 'pattern' => '/invoices/{id}/generate'],
 
