@@ -371,8 +371,8 @@ foreach ($clients as $c) {
 
             <a href="<?= htmlspecialchars(route('settings.index')) ?>">⚙️ Paramètres</a>
 
-            <a href="parametres.php">⚙️ Paramètres</a>
-main
+        
+
             <a href="<?= route('logout') ?>" style="color: #e63946;">❌ Quitter</a>
         </div>
     </div>

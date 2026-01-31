@@ -3,7 +3,8 @@
         "classmap": [
             "app/Core",
             "app/Controllers",
-            "app/Models"
+            "app/Models",
+            "app/Services"
         ],
         "files": [
             "app/helpers.php"

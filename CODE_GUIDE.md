@@ -31,7 +31,7 @@ Sweetydog/
 │   ├── routes.php         ← Configuration de toutes les routes
 │   ├── helpers.php        ← Fonctions globales utiles
 │
-├── views/                 ← Templates HTML/PHP
+├── app/Views/                 ← Templates HTML/PHP
 │   ├── login_view.php
 │   ├── liste_clients_view.php
 │   ├── modifier_client_view.php
@@ -77,9 +77,9 @@ Voici ce qui se passe quand un utilisateur visite `/clients` :
 
 6. Controller.php::view()
    ├─ Extrait les variables
-   └─ Inclut views/liste_clients_view.php
+   └─ Inclut app/Views/liste_clients_view.php
 
-7. views/liste_clients_view.php
+7. app/Views/liste_clients_view.php
    └─ Affiche le HTML avec les données
 
 8. Réponse HTTP au navigateur
@@ -187,7 +187,7 @@ Chaque ressource suit ce pattern :
 
 ## 📄 Les Vues (Templates)
 
-Fichier : `views/liste_clients_view.php`
+Fichier : `app/Views/liste_clients_view.php`
 
 ```php
 <?php
@@ -373,7 +373,7 @@ class StatsController extends Controller {
 
 ### 3. Créer la Vue
 
-Fichier : `views/stats_view.php`
+Fichier : `app/Views/stats_view.php`
 
 ```php
 <h1>Statistiques</h1>
@@ -413,7 +413,7 @@ URL : `/clients` ou `/clients/5/edit`
 Vérifier :
 1. La route existe dans `app/routes.php`
 2. Le contrôleur et la méthode existent
-3. La vue existe dans `views/`
+3. La vue existe dans `app/Views/`
 
 ---
 

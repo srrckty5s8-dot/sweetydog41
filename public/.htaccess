@@ -1,14 +1,7 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /sweetydog/public/
 
-  DirectoryIndex index.php
-
-  # Ne pas réécrire les vrais fichiers/dossiers
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
-
-  # Tout le reste -> index.php
-  RewriteRule ^ index.php?_route=$0 [QSA,L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.php [L]
 </IfModule>

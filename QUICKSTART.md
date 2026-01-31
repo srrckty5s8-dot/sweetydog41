@@ -45,7 +45,7 @@ Sweetydog/
 │   ├── Models/      ← Requêtes base de données
 │   ├── routes.php   ← Configuration routes
 │   └── helpers.php  ← Fonctions globales
-├── views/           ← Templates HTML
+├── app/Views/           ← Templates HTML
 ├── assets/          ← CSS, images
 └── config/          ← Configuration base de données
 ```
@@ -135,7 +135,7 @@ class PageController extends Controller {
 
 #### 3️⃣ Créer la Vue
 
-Fichier : `views/pages/about.php`
+Fichier : `app/Views/pages/about.php`
 
 ```php
 <h1><?php echo e($page_title); ?></h1>
@@ -186,7 +186,7 @@ Format :
 ]
 ```
 
-### views/
+### app/Views/
 **Templates** : Fichiers HTML+PHP
 
 Accès aux données : via `extract()`
@@ -387,7 +387,7 @@ redirect('clients.index');
 
 **Solution** :
 1. Vérifier le nom du fichier vue
-2. Vérifier que le fichier existe dans `views/`
+2. Vérifier que le fichier existe dans `app/Views/`
 3. Utiliser `$this->view('exact_name', $data);`
 
 ### "Pas d'accès après login"

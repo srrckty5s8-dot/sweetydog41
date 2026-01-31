@@ -83,7 +83,7 @@ Quel document lire selon votre profil et vos besoins.
 1. **app/Controllers/ClientController.php** (30 min)
    - Étudier le pattern CRUD
    
-2. **views/liste_clients_view.php** (20 min)
+2. **app/Views/liste_clients_view.php** (20 min)
    - Voir les helpers en action
    
 3. **Exercice** : Créer un nouveau contrôleur (10 min)
@@ -291,7 +291,7 @@ Avant de coder des features, vérifier que vous pouvez répondre :
 | Sécurité | CODE_GUIDE.md | app/helpers.php |
 | Flux HTTP | CODE_STRUCTURE.md | public/index.php |
 | Authentification | CODE_GUIDE.md | app/Controllers/AuthController.php |
-| Vues | CODE_GUIDE.md | views/ |
+| Vues | CODE_GUIDE.md | app/Views/ |
 | Base de données | CODE_GUIDE.md | app/Models/ |
 
 ---

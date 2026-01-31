@@ -121,7 +121,7 @@ CODE (commenté)
 │       ├── AuthController.php
 │       ├── ClientController.php
 │       └── AnimalController.php
-└── views/               ← Templates HTML
+└── app/Views/               ← Templates HTML
 ```
 
 ---

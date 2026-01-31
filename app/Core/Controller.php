@@ -35,7 +35,7 @@ class Controller
      *     ]);
      * }
      * 
-     * Dans la vue (views/clients/show.php) :
+     * Dans la vue (app/Views/clients/show.php) :
      * Les variables seront directement accessibles :
      * - $client sera disponible
      * - $page_title sera disponible
@@ -44,19 +44,19 @@ class Controller
      * @param array  $data - Données à passer à la vue (deviennent des variables PHP)
      */
     protected function view(string $view, array $data = []): void
-{
-    extract($data);
+    {
+        extract($data);
 
-    $path = __DIR__ . '/../Views/' . $view . '.php';
+        $path = __DIR__ . '/../Views/' . $view . '.php';
 
-    if (file_exists($path)) {
-        require $path;
-        return;
+        if (file_exists($path)) {
+            require $path;
+            return;
+        }
+
+        http_response_code(500);
+        die("Vue introuvable : $path");
     }
-
-    http_response_code(500);
-    die("Vue introuvable : $path");
-}
 
 
     /**

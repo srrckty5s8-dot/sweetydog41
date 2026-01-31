@@ -71,9 +71,9 @@ class AnimalController extends Controller
         }
 
         // TODO: remplacer par la vraie requête historique
-       $historique = Soin::findByAnimal($id);
-$this->view('suivi_toilettage_view', compact('animal', 'historique'));
-exit;
+        $historique = Soin::findByAnimal($id);
 
+        $this->view('suivi_toilettage_view', compact('animal', 'historique'));
+        exit;
     }
 }

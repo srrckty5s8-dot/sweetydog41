@@ -284,12 +284,12 @@ Contient :
 │                                                                 │
 │  protected function view($view, $data) {                        │
 │    extract($data);  ← $proprio devient variable PHP           │
-│    require 'views/modifier_client_view.php';                   │
+│    require 'app/Views/modifier_client_view.php';                   │
 │  }                                                              │
 └─────────────────────────────────────────────────────────────────┘
                                     ↓
 ┌─────────────────────────────────────────────────────────────────┐
-│    6. views/modifier_client_view.php (Template HTML+PHP)        │
+│    6. app/Views/modifier_client_view.php (Template HTML+PHP)        │
 │                                                                 │
 │  <form action="<?php echo route('clients.update', ['id'=>5]); ?>"
 │                                                                 │

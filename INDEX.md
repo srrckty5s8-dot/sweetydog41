@@ -42,7 +42,7 @@ Guide de tous les fichiers du projet avec leurs emplacements et responsabilités
 │   ├── 📄 routes.php          ← Configuration des routes ⭐
 │   └── 📄 helpers.php         ← Fonctions globales ⭐
 │
-├── 📁 views/                  ← Templates HTML+PHP
+├── 📁 app/Views/                  ← Templates HTML+PHP
 │   ├── 📄 login_view.php      ← Formulaire de connexion
 │   ├── 📄 liste_clients_view.php    ← Dashboard principal
 │   ├── 📄 ajouter_client_view.php   ← Créer client
@@ -74,7 +74,7 @@ Guide de tous les fichiers du projet avec leurs emplacements et responsabilités
 | `app/helpers.php` | Fonctions globales | 🔴 CRITIQUE |
 | `app/Controllers/AuthController.php` | Authentification | 🟠 Majeur |
 | `app/Controllers/ClientController.php` | Clients CRUD | 🟠 Majeur |
-| `views/liste_clients_view.php` | Dashboard | 🟠 Majeur |
+| `app/Views/liste_clients_view.php` | Dashboard | 🟠 Majeur |
 
 ### 📖 Fichiers de Documentation (À Lire)
 
@@ -98,8 +98,8 @@ Guide de tous les fichiers du projet avec leurs emplacements et responsabilités
 
 | Fichier | Rôle |
 |---------|------|
-| `views/login_view.php` | Page de login |
-| `views/liste_clients_view.php` | Dashboard principal |
+| `app/Views/login_view.php` | Page de login |
+| `app/Views/liste_clients_view.php` | Dashboard principal |
 | `assets/style.css` | Styles CSS |
 
 ### 🗄️ Modèles (Base de Données)
@@ -132,14 +132,14 @@ public/index.php
             │   ├→ Hérite : app/Core/Controller.php
             │   ├→ Utilise : app/Models/Client.php
             │   ├→ Utilise : app/Models/RendezVous.php
-            │   └→ Affiche : views/*_view.php
+            │   └→ Affiche : app/Views/*_view.php
             │
             └→ app/Controllers/AnimalController.php
                 ├→ Hérite : app/Core/Controller.php
                 ├→ Utilise : app/Models/Animal.php
-                └→ Affiche : views/*_view.php
+                └→ Affiche : app/Views/*_view.php
 
-views/*_view.php
+app/Views/*_view.php
     ├→ Utilise : app/helpers.php (route, e, etc)
     ├→ Inclut : assets/style.css
     └→ Reçoit : Données extraites par extract()
@@ -245,7 +245,7 @@ redirect('clients.index')
 → `app/Controllers/XxxController.php`
 
 ### Pour modifier l'affichage
-→ `views/xxx_view.php`
+→ `app/Views/xxx_view.php`
 
 ### Pour la base de données
 → `app/Models/Xxx.php`
@@ -283,8 +283,8 @@ redirect('clients.index')
 |---------|-------------------|
 | URL ne fonctionne pas | `app/routes.php` |
 | Contrôleur non trouvé | `app/Controllers/` |
-| Vue non trouvée | `views/` |
-| Données non affichées | `app/Controllers/` + `views/` |
+| Vue non trouvée | `app/Views/` |
+| Données non affichées | `app/Controllers/` + `app/Views/` |
 | Erreur base de données | `app/Models/` + `config/db.php` |
 | Erreur SQL | `app/Models/` |
 | Erreur d'authentification | `app/Controllers/AuthController.php` |
