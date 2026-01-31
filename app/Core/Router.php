@@ -59,11 +59,22 @@ class Router
 
         // Retirer le basePath /Sweetydog/public (ou /Sweetydog)
         $scriptDir = str_replace('\\', '/', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
-        if ($scriptDir !== '' && substr($scriptDir, -7) === '/public') {
-            $scriptDir = substr($scriptDir, 0, -7);
+        $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '';
+        $normalizedScriptDir = strtolower($scriptDir);
+        if ($scriptDir !== '' && substr($normalizedScriptDir, -7) === '/public') {
+            $publicPath = $scriptDir;
+            $basePath = $publicPath;
+            if ($requestPath === '' || strpos(strtolower($requestPath), strtolower($publicPath)) !== 0) {
+                $basePath = substr($publicPath, 0, -7);
+            }
+            $scriptDir = $basePath;
         }
         if ($scriptDir && $scriptDir !== '/' && strpos($url, $scriptDir) === 0) {
             $url = substr($url, strlen($scriptDir));
+        }
+
+        if ($url === '/index.php' || strpos($url, '/index.php/') === 0) {
+            $url = substr($url, strlen('/index.php'));
         }
 
         return $url ?: '/';
@@ -186,8 +197,15 @@ class Router
 
         // Préfixe basePath (/Sweetydog)
         $basePath = str_replace('\\', '/', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
-        if ($basePath !== '' && substr($basePath, -7) === '/public') {
-            $basePath = substr($basePath, 0, -7);
+        $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '';
+        $normalizedBasePath = strtolower($basePath);
+        if ($basePath !== '' && substr($normalizedBasePath, -7) === '/public') {
+            $publicPath = $basePath;
+            $resolvedPath = $publicPath;
+            if ($requestPath === '' || strpos(strtolower($requestPath), strtolower($publicPath)) !== 0) {
+                $resolvedPath = substr($publicPath, 0, -7);
+            }
+            $basePath = $resolvedPath;
         }
         if ($basePath && $basePath !== '/') {
             return $basePath . $url;

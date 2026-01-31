@@ -75,10 +75,16 @@ function url($path = '')
 {
     // Récupérer le dossier contenant index.php
     $scriptPath = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/');
+    $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '';
     
-    // Retirer /public si l'app est servie depuis ce dossier
+    // Retirer /public si l'URL ne contient pas ce segment
     if ($scriptPath !== '' && substr($scriptPath, -7) === '/public') {
-        $scriptPath = substr($scriptPath, 0, -7);
+        $publicPath = $scriptPath;
+        $basePath = $publicPath;
+        if ($requestPath === '' || strpos($requestPath, $publicPath) !== 0) {
+            $basePath = substr($publicPath, 0, -7);
+        }
+        $scriptPath = $basePath;
     }
 
     // Ne pas ajouter le basePath si on est à la racine
