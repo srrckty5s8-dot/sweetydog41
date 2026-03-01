@@ -1,4 +1,5 @@
 deployment:
 tasks:
 - export DEPLOYPATH=/home/fahi3553/public_html/
-- /bin/cp -R * $DEPLOYPATH
+- /bin/cp -a . "$DEPLOYPATH"
+- /bin/find "$DEPLOYPATH" -mindepth 1 -maxdepth 1 -name ".git" -exec /bin/rm -rf {} +
