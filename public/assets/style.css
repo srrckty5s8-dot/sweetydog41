@@ -1,0 +1,354 @@
+/* Palette SweetyDog : Vert Forêt & Blanc Cassé */
+:root {
+    --vert-fonce: #1b4332;       /* Vert sapin profond */
+    --vert-moyen: #2d6a4f;      /* Vert pour les boutons */
+    --blanc-casse: #f8f9f2;     /* Fond de page */
+    --pur-blanc: #ffffff;       /* Fond des cartes */
+    --texte: #081c15;           /* Texte presque noir */
+    --danger: #9d0208;          /* Rouge sombre pour suppression */
+}
+
+/* ✅ FIX GLOBAL : box-sizing pour tous les éléments */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--blanc-casse);
+    color: var(--texte);
+    margin: 0;
+    padding: 40px 20px;
+    line-height: 1.6;
+    -webkit-text-size-adjust: 100%;
+}
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+img, svg, video, canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    body { padding: 15px 10px; }
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--pur-blanc);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(27, 67, 50, 0.1);
+    border: 1px solid #e9ecef;
+}
+
+@media (max-width: 768px) {
+    .container { padding: 20px 15px; border-radius: 12px; }
+    .container-large { padding: 15px 10px !important; }
+}
+
+/* Titres */
+h2, h3 {
+    color: var(--vert-fonce);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 3px solid var(--vert-moyen);
+    padding-bottom: 8px;
+    margin-bottom: 30px;
+}
+
+/* Champs de saisie
+   ✅ MODIF PROPRE : on exclut .search-input et .clients-search pour ne pas casser la barre de recherche */
+input[type="text"]:not(.search-input):not(.clients-search-input),
+input[type="email"],
+input[type="tel"],
+select {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 8px 0 25px 0;
+    border: 2px solid #d8e2dc;
+    border-radius: 8px;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--vert-moyen);
+}
+
+/* Boutons */
+button, .btn {
+    background-color: var(--vert-fonce);
+    color: var(--blanc-casse);
+    padding: 14px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+button:hover, .btn:hover {
+    background-color: var(--vert-moyen);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Exclure les boutons personnalisés de style.css */
+.clients-btn-new {
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 46px !important;
+    margin: 0 !important;
+    border-radius: 14px !important;
+    background-color: var(--vert-fonce) !important;
+    border: none !important;
+    color: white !important;
+    font-weight: 900 !important;
+    transition: all 0.2s ease !important;
+}
+
+.btn-danger {
+    background-color: transparent;
+    color: var(--danger);
+    border: 2px solid var(--danger);
+}
+
+.btn-danger:hover {
+    background-color: var(--danger);
+    color: white;
+}
+
+/* Tableaux */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+th {
+    background-color: var(--vert-fonce);
+    color: white;
+    padding: 15px;
+    text-align: left;
+}
+
+th:first-child { border-radius: 8px 0 0 8px; }
+th:last-child { border-radius: 0 8px 8px 0; }
+
+td {
+    padding: 15px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+}
+
+/* Alertes */
+.alert {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+.alert-success { background: #d8f3dc; color: #1b4332; border-left: 5px solid var(--vert-moyen); }
+.alert-error { background: #ffdfd3; color: #9d0208; border-left: 5px solid var(--danger); }
+
+/* Ajouts pour la liste */
+.container-large {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: var(--pur-blanc);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: var(--vert-fonce);
+    color: white;
+    padding: 15px;
+    font-size: 0.9em;
+    text-transform: uppercase;
+}
+
+tr:nth-child(even) { background-color: #fcfdfa; }
+
+td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    color: var(--texte);
+}
+
+/* Badges */
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+.badge-yes { background-color: #d8f3dc; color: #1b4332; }
+.badge-no { background-color: #f8edeb; color: #9d0208; }
+
+/* Bouton Modifier spécifique */
+.btn-edit {
+    text-decoration: none;
+    color: var(--vert-fonce);
+    border: 1px solid var(--vert-fonce);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    transition: 0.3s;
+}
+
+.btn-edit:hover {
+    background-color: var(--vert-fonce);
+    color: white;
+}
+.btn-delete-small {
+    background-color: #e63946; /* Rouge doux */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.85em;
+    transition: background 0.3s;
+}
+
+.btn-delete-small:hover {
+    background-color: #9d0208; /* Rouge plus foncé au survol */
+}
+
+/* On s'assure que les lignes du tableau sont bien alignées verticalement */
+table td {
+    vertical-align: middle;
+}
+
+/* ============================
+   RESPONSIVE GLOBAL
+   ============================ */
+@media (max-width: 768px) {
+    h2, h3 {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+
+    .header-flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    table th, table td {
+        padding: 10px 8px;
+        font-size: 0.82rem;
+    }
+
+    button, .btn {
+        padding: 12px 18px;
+        font-size: 0.9rem;
+    }
+}
+
+/* ============================
+   SOCLE MOBILE GLOBAL
+   ============================ */
+textarea {
+    max-width: 100%;
+}
+
+input, select, textarea, button {
+    font-size: 16px;
+}
+
+.top-bar,
+.top-nav,
+.header-flex {
+    flex-wrap: wrap;
+}
+
+.top-nav a {
+    white-space: nowrap;
+}
+
+.table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.modal-content,
+.modal-card {
+    max-width: min(95vw, 680px);
+    max-height: 88vh;
+    overflow: auto;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 18px 10px;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 20px 14px;
+        border-radius: 12px;
+    }
+
+    .container-large {
+        max-width: 100%;
+        padding: 16px 10px !important;
+        border-radius: 12px;
+    }
+
+    .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .top-nav {
+        width: 100%;
+        gap: 10px;
+    }
+
+    .top-nav a {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 600px) {
+    h2, h3 {
+        letter-spacing: 0.3px;
+    }
+
+    .container,
+    .container-large {
+        padding: 12px 8px !important;
+    }
+
+    button, .btn {
+        width: 100%;
+        text-align: center;
+    }
+}

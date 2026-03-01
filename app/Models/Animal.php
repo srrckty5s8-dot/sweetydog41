@@ -27,9 +27,9 @@ class Animal
 
         $pdo = Database::getConnection();
 
-        $sql = "SELECT a.*, p.nom, p.prenom
+        $sql = "SELECT a.*, p.nom, p.prenom, p.telephone
                 FROM Animaux a
-                INNER JOIN Proprietaires p 
+                INNER JOIN Proprietaires p
                   ON p.id_proprietaire = a.id_proprietaire
                 WHERE a.id_animal = :id";
 
@@ -49,7 +49,9 @@ class Animal
                     espece = :espece,
                     race = :race,
                     poids = :poids,
-                    steril = :steril
+                    steril = :steril,
+                    sexe = :sexe,
+                    date_naissance = :date_naissance
                 WHERE id_animal = :id";
 
         $stmt = $pdo->prepare($sql);
@@ -59,6 +61,8 @@ class Animal
             'race' => $data['race'],
             'poids' => $data['poids'],
             'steril' => $data['steril'],
+            'sexe' => $data['sexe'] ?? null,
+            'date_naissance' => !empty($data['date_naissance']) ? $data['date_naissance'] : null,
             'id' => $id,
         ]);
     }

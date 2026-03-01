@@ -120,11 +120,14 @@ class ClientController extends Controller
         } else {
             // Créer un nouveau propriétaire
             // Récupérer les données du formulaire
-            $prenom  = trim($_POST['prenom'] ?? '');
-            $nom     = trim($_POST['nom'] ?? '');
-            $tel     = trim($_POST['tel'] ?? '');
-            $email   = trim($_POST['email'] ?? '');
-            $adresse = trim($_POST['adresse'] ?? '');
+            $prenom      = trim($_POST['prenom'] ?? '');
+            $nom         = trim($_POST['nom'] ?? '');
+            $tel         = trim($_POST['tel'] ?? '');
+            $email       = trim($_POST['email'] ?? '');
+            $rue         = trim($_POST['rue'] ?? '');
+            $code_postal = trim($_POST['code_postal'] ?? '');
+            $ville       = trim($_POST['ville'] ?? '');
+            $adresse     = implode("\n", array_filter([$rue, trim($code_postal . ' ' . $ville)]));
 
             // Validation : nom et prénom obligatoires
             if ($nom === '' || $prenom === '') {
@@ -143,11 +146,13 @@ class ClientController extends Controller
         }
 
         // 2) ANIMAL : Récupérer les données du formulaire
-        $nomAnimal = trim($_POST['nom_chien'] ?? '');
-        $espece    = trim($_POST['espece'] ?? '');
-        $race      = trim($_POST['race'] ?? '');
-        $poids     = $_POST['poids'] !== '' ? (float)$_POST['poids'] : null;
-        $steril    = isset($_POST['steril']) ? (int)$_POST['steril'] : 0;
+        $nomAnimal      = trim($_POST['nom_chien'] ?? '');
+        $espece         = trim($_POST['espece'] ?? '');
+        $race           = trim($_POST['race'] ?? '');
+        $poids          = $_POST['poids'] !== '' ? (float)$_POST['poids'] : null;
+        $steril         = isset($_POST['steril']) ? (int)$_POST['steril'] : 0;
+        $sexe           = trim($_POST['sexe'] ?? '');
+        $date_naissance = trim($_POST['date_naissance'] ?? '');
 
         // Validation : le nom de l'animal est obligatoire
         if ($nomAnimal === '') {
@@ -163,6 +168,8 @@ class ClientController extends Controller
             'race' => $race,
             'poids' => $poids,
             'sterilise' => $steril,
+            'sexe' => $sexe ?: null,
+            'date_naissance' => $date_naissance ?: null,
         ]);
 
         // Rediriger vers la liste des clients
@@ -194,11 +201,22 @@ class ClientController extends Controller
 
         // Récupérer les données du propriétaire
         $proprio = Client::findProprietaire($id);
-        
+
         // Vérifier que le propriétaire existe
         if (!$proprio) {
             redirect('clients.index');
             exit;
+        }
+
+        // Décomposer l'adresse en rue / code postal / ville
+        $lignes = explode("\n", $proprio['adresse'] ?? '');
+        $proprio['rue'] = trim($lignes[0] ?? '');
+        if (!empty($lignes[1]) && preg_match('/^(\d{5})\s*(.*)$/', trim($lignes[1]), $m)) {
+            $proprio['code_postal'] = $m[1];
+            $proprio['ville'] = $m[2];
+        } else {
+            $proprio['code_postal'] = '';
+            $proprio['ville'] = trim($lignes[1] ?? '');
         }
 
         // Afficher le formulaire de modification
@@ -227,12 +245,14 @@ class ClientController extends Controller
         }
 
         // Récupérer les données du formulaire
-        $nom       = trim($_POST['nom'] ?? '');
-        $prenom    = trim($_POST['prenom'] ?? '');
-        // Support de plusieurs noms de champs pour la compatibilité
-        $telephone = trim($_POST['tel'] ?? $_POST['telephone'] ?? '');
-        $email     = trim($_POST['email'] ?? '');
-        $adresse   = trim($_POST['adresse'] ?? '');
+        $nom         = trim($_POST['nom'] ?? '');
+        $prenom      = trim($_POST['prenom'] ?? '');
+        $telephone   = trim($_POST['tel'] ?? $_POST['telephone'] ?? '');
+        $email       = trim($_POST['email'] ?? '');
+        $rue         = trim($_POST['rue'] ?? '');
+        $code_postal = trim($_POST['code_postal'] ?? '');
+        $ville       = trim($_POST['ville'] ?? '');
+        $adresse     = implode("\n", array_filter([$rue, trim($code_postal . ' ' . $ville)]));
 
         // Validation : nom et prénom obligatoires
         if ($nom === '' || $prenom === '') {
@@ -258,11 +278,33 @@ class ClientController extends Controller
     /**
      * Supprime un client
      * 
-     * À IMPLÉMENTER - Créer la méthode delete() pour supprimer un client
-     * 
      * Route : POST /clients/{id}/delete
      * 
      * @param int $id - ID du propriétaire à supprimer
      */
-    // public function delete($id = 0) { ... }
+    public function delete($id = 0)
+    {
+        // Vérifier l'authentification
+        $this->requireLogin();
+
+        // Récupérer l'ID du propriétaire depuis le paramètre de route
+        $id = (int)$id;
+
+        // Validation : ID requis et valide
+        if ($id <= 0) {
+            redirect('clients.index', [], ['error' => 'delete_failed']);
+            exit;
+        }
+
+        // Supprimer le propriétaire et toutes ses données liées
+        $deleted = Client::deleteProprietaire($id);
+
+        if ($deleted) {
+            redirect('clients.index', [], ['success' => 'deleted']);
+            exit;
+        }
+
+        redirect('clients.index', [], ['error' => 'delete_failed']);
+        exit;
+    }
 }

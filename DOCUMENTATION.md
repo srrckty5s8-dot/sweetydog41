@@ -1,314 +1,506 @@
-# 📋 Résumé des Commentaires Ajoutés
+# SweetyDog - Documentation Technique
 
-Ce document liste tous les fichiers commentés et les améliorations apportées.
+## Sommaire
 
----
-
-## ✅ Fichiers Commentés
-
-### 1. **app/Core/Router.php** - Moteur de Routage
-
-**Commentaires ajoutés** :
-- En-tête expliquant l'architecture du routeur
-- Détails sur le système de routes nommées
-- Explication de la conversion pattern → regex
-- Documentation de chaque méthode
-- Exemples d'utilisation
-
-**Sections commentées** :
-- `register()` - Enregistrement des routes
-- `patternToRegex()` - Conversion du pattern /clients/{id} en regex
-- `getCurrentUrl()` - Extraction de l'URL relative
-- `run()` - Dispatching des requêtes
-- `executeLegacyRoute()` - Support backward compatibility
-- `executeRoute()` - Exécution des contrôleurs
-- `route()` - Génération des URLs
-- `getCurrentRoute()` - Récupération de la route actuelle
+1. [Presentation du projet](#1-presentation-du-projet)
+2. [Architecture technique](#2-architecture-technique)
+3. [Structure des fichiers](#3-structure-des-fichiers)
+4. [Base de donnees](#4-base-de-donnees)
+5. [Systeme de routage](#5-systeme-de-routage)
+6. [Controleurs](#6-controleurs)
+7. [Modeles](#7-modeles)
+8. [Vues](#8-vues)
+9. [Fonctions utilitaires (Helpers)](#9-fonctions-utilitaires-helpers)
+10. [Authentification](#10-authentification)
+11. [Systeme de facturation](#11-systeme-de-facturation)
+12. [Dependances externes](#12-dependances-externes)
+13. [Configuration](#13-configuration)
+14. [Securite](#14-securite)
 
 ---
 
-### 2. **app/helpers.php** - Fonctions Globales
+## 1. Presentation du projet
 
-**Commentaires ajoutés** :
-- En-tête expliquant le rôle des helpers
-- Exemples d'utilisation pour chaque fonction
-- Explications sur XSS et sécurité
-- Documentation détaillée des sessions flash
+**SweetyDog** est une application web de gestion pour salon de toilettage canin. Elle permet de :
 
-**Fonctions documentées** :
-- `route()` - Génération d'URLs
-- `url()` - URLs absolues
-- `redirect()` - Redirections
-- `currentUrl()` - URL actuelle
-- `isCurrentRoute()` - Vérification de route
-- `param()` - Récupération de paramètres
-- `e()` - Échappement XSS (très détaillé)
-- `flashMessage()` - Messages temporaires
-- `getFlashMessage()` - Récupération de messages
-- `getAllFlashMessages()` - Tous les messages
-- `can()` - Vérification de permissions
+- Gerer les clients (proprietaires) et leurs animaux
+- Planifier des rendez-vous via un calendrier interactif
+- Enregistrer les prestations de toilettage
+- Generer des factures conformes au format Factur-X
+- Transmettre automatiquement les factures a N2F
+
+**Stack technique :** PHP 8+ / MySQL / MVC custom / DomPDF / FullCalendar.js
 
 ---
 
-### 3. **app/routes.php** - Configuration des Routes
+## 2. Architecture technique
 
-**Commentaires ajoutés** :
-- En-tête expliquant le format et l'utilisation
-- Syntaxe des patterns
-- Exemples de génération d'URLs
-- Vérification de pages actives
-- Commentaires pour chaque groupe de routes
+L'application suit le pattern **MVC (Model-View-Controller)** avec un framework custom leger.
 
-**Groupes documentés** :
-- 🔐 **Authentification** : login, logout, home
-- 👥 **Clients** : CRUD complet (list, create, store, edit, update, delete)
-- 🐕 **Animaux** : Modification et suivi
-- 📅 **Rendez-vous** : Calendrier et gestion
-- ⚙️ **Paramètres** : Configuration
-
----
-
-### 4. **app/Core/Controller.php** - Classe de Base
-
-**Commentaires ajoutés** :
-- En-tête expliquant le rôle de Controller
-- Documentation détaillée de `view()`
-- Explication de `extract()`
-- Documentation de `requireLogin()`
-- Points d'amélioration future
-
----
-
-### 5. **app/Controllers/AuthController.php** - Authentification
-
-**Commentaires ajoutés** :
-- En-tête avec fonctionnalités et sécurité
-- Logique de `redirectHome()`
-- Processus de `login()` avec PDO
-- Explication de `password_verify()`
-- Créations de session
-- Logique de `logout()`
-
----
-
-### 6. **app/Controllers/ClientController.php** - Gestion des Clients
-
-**Commentaires ajoutés** :
-- En-tête avec architecture
-- Documentation CRUD complet
-- Logique de sélection propriétaire existant vs nouveau
-- Validation des données
-- Redirections avec helpers
-
-**Méthodes documentées** :
-- `index()` - Alias pour liste
-- `liste()` - Dashboard clients
-- `create()` - Formulaire de création
-- `store()` - Sauvegarde
-- `edit()` - Formulaire de modification
-- `update()` - Mise à jour
-- `delete()` - À implémenter
-
----
-
-### 7. **app/Controllers/AnimalController.php** - Gestion des Animaux
-
-**Commentaires ajoutés** :
-- En-tête avec fonctionnalités
-- Lien vers propriétaires
-- Historique des toilettages
-
-**Méthodes documentées** :
-- `edit()` - Formulaire de modification
-- `update()` - Mise à jour
-- `tracking()` - À implémenter (suivi)
-
----
-
-### 8. **public/index.php** - Point d'Entrée Principal
-
-**Commentaires ajoutés** :
-- En-tête expliquant le flux
-- Diagramme du flux de requête
-- Documentation de chaque étape d'initialisation
-- Explication de l'autoloader
-- Rôle du routeur
-
-**Sections commentées** :
-- Démarrage de session
-- Enregistrement de l'autoloader
-- Chargement des helpers
-- Création du routeur
-- Lancement du routage
-
----
-
-## 📊 Statistiques
-
-| Fichier | Lignes ajoutées | Type |
-|---------|-----------------|------|
-| Router.php | ~150 | Code + doc détaillée |
-| helpers.php | ~200 | Doc fonctions + exemples |
-| routes.php | ~80 | Commentaires routes |
-| Controller.php | ~50 | Doc détaillée |
-| AuthController.php | ~60 | Doc flux |
-| ClientController.php | ~120 | Doc CRUD |
-| AnimalController.php | ~50 | Doc simple |
-| public/index.php | ~40 | Doc flux |
-| **CODE_GUIDE.md** | **300+** | Guide complet |
-| **Total** | ~1000 lignes | Documentation |
-
----
-
-## 🎯 Points Clés Documentés
-
-### 1. **Architecture MVC**
-- Séparation Modèle/Vue/Contrôleur
-- Flux de requête complet
-- Rôle de chaque composant
-
-### 2. **Système de Routing**
-- Routes nommées vs legacy
-- Conversion pattern → regex
-- Génération d'URLs
-- Extraction de paramètres
-
-### 3. **Sécurité**
-- Protection XSS avec `e()`
-- Password hashing avec `password_verify()`
-- Validation des données
-- Sessions sécurisées
-
-### 4. **Bonnes Pratiques**
-- Utilisation des helpers
-- Redirections propres
-- Structure CRUD standard
-- Noms explicites
-
-### 5. **Extensibilité**
-- Comment ajouter une nouvelle page
-- Pattern à suivre pour les routes
-- Structure des contrôleurs
-- Utilisation des modèles
-
----
-
-## 🔄 Intégration Backward Compatibility
-
-Le code documenté maintient la **compatibilité avec l'ancien système** :
-
-```php
-// Ancien système (encore supporté)
-index.php?c=client&a=edit&id=5
-
-// Nouveau système (recommandé)
-/clients/5/edit
+```
+Navigateur
+    |
+    v
+public/index.php  (point d'entree unique)
+    |
+    v
+Router::run()  (analyse l'URL, trouve la route)
+    |
+    v
+Controller@action  (logique metier)
+    |       |
+    v       v
+  Model   View
+  (PDO)   (PHP template)
 ```
 
-Les commentaires expliquent :
-- Quand utiliser l'ancien format
-- Comment la rétro-compatibilité marche
-- Migration progressive recommandée
+**Flux d'une requete :**
+
+1. Toutes les requetes passent par `public/index.php`
+2. Le `Router` analyse l'URL et la fait correspondre a une route nommee
+3. Le controleur correspondant est instancie, la methode appelee
+4. Le controleur interroge les modeles (base de donnees via PDO)
+5. Le controleur rend une vue avec les donnees
 
 ---
 
-## 💡 Améliorations Futures Signalées
+## 3. Structure des fichiers
 
-### Dans AuthController::requireLogin()
-```php
-// À améliorer : utiliser redirect() au lieu de header()
-// À améliorer : implémenter des rôles/permissions plus granulaires
 ```
-
-### Dans ClientController::delete()
-```php
-// À IMPLÉMENTER : créer cette méthode
-```
-
-### Dans AnimalController::tracking()
-```php
-// À IMPLÉMENTER : créer cette méthode pour afficher l'historique
+Sweetydog/
+|
+|-- app/
+|   |-- Core/
+|   |   |-- Router.php           # Routeur URL -> Controleur
+|   |   |-- Controller.php       # Classe de base des controleurs
+|   |   |-- Database.php         # Connexion PDO (singleton)
+|   |
+|   |-- Controllers/
+|   |   |-- AuthController.php          # Connexion / Deconnexion
+|   |   |-- ClientController.php        # CRUD proprietaires + animaux
+|   |   |-- AnimalController.php        # Edition animal + suivi toilettage
+|   |   |-- AppointmentController.php   # Gestion calendrier / RDV
+|   |   |-- PrestationController.php    # Enregistrement des soins
+|   |   |-- InvoiceController.php       # Generation et telechargement factures
+|   |   |-- SettingsController.php      # Parametres (mot de passe)
+|   |
+|   |-- Models/
+|   |   |-- Client.php        # Proprietaires + animaux
+|   |   |-- Animal.php        # Animaux
+|   |   |-- RendezVous.php    # Rendez-vous
+|   |   |-- Prestation.php    # Prestations de soins
+|   |   |-- Soin.php          # Historique des soins
+|   |   |-- User.php          # Utilisateurs admin
+|   |
+|   |-- Services/
+|   |   |-- PisteService.php  # Integration OAuth PISTE (gouv.fr)
+|   |
+|   |-- Views/
+|   |   |-- login_view.php                # Page de connexion
+|   |   |-- liste_clients_view.php        # Dashboard / liste clients
+|   |   |-- ajouter_client_view.php       # Formulaire ajout client
+|   |   |-- modifier_client_view.php      # Formulaire edition client
+|   |   |-- modifier_animal_view.php      # Formulaire edition animal
+|   |   |-- calendrier_view.php           # Agenda interactif
+|   |   |-- suivi_toilettage_view.php     # Suivi soins + facturation
+|   |   |-- facture_view.php              # Template PDF facture
+|   |   |-- parametres_view.php           # Page parametres
+|   |
+|   |-- routes.php        # Definition de toutes les routes
+|   |-- helpers.php        # Fonctions globales utilitaires
+|
+|-- config/
+|   |-- db.php             # Configuration base de donnees
+|
+|-- public/
+|   |-- index.php          # Point d'entree de l'application
+|   |-- assets/            # CSS, JS, images
+|
+|-- factures/              # Factures PDF generees
+|-- vendor/                # Dependances Composer
+|-- composer.json          # Declaration des dependances
 ```
 
 ---
 
-## 📖 Ressource Principale
+## 4. Base de donnees
 
-**Fichier : CODE_GUIDE.md**
+**Nom de la base :** `mon_salon`
 
-Guide complet de 300+ lignes couvrant :
-- Architecture générale
-- Flux de requête détaillé
-- Système de routes
-- Contrôleurs et actions
-- Vues et templates
-- Authentification
-- Modèles de base de données
-- Fonctions helpers
-- CSS et styling
-- Comment ajouter une nouvelle page
-- Débogage
-- Checklist production
-- Bonnes pratiques
+### Table `Proprietaires`
 
----
+| Colonne           | Type         | Description              |
+|-------------------|--------------|--------------------------|
+| id_proprietaire   | INT (PK)     | Identifiant unique       |
+| nom               | VARCHAR      | Nom de famille           |
+| prenom            | VARCHAR      | Prenom                   |
+| telephone         | VARCHAR      | Numero de telephone      |
+| email             | VARCHAR      | Adresse email            |
+| adresse           | TEXT         | Adresse postale          |
 
-## ✨ Bénéfices
+### Table `Animaux`
 
-✅ **Code plus lisible et compréhensible**
-- Chaque fonction a son objectif clair
-- Exemples d'utilisation fournis
-- Explications du "pourquoi" et du "comment"
+| Colonne           | Type         | Description                          |
+|-------------------|--------------|--------------------------------------|
+| id_animal         | INT (PK)     | Identifiant unique                   |
+| id_proprietaire   | INT (FK)     | Reference vers Proprietaires         |
+| nom_animal        | VARCHAR      | Nom de l'animal                      |
+| espece            | VARCHAR      | Espece (Chien, Chat, Lapin...)       |
+| race              | VARCHAR      | Race                                 |
+| poids             | FLOAT        | Poids en kg                          |
+| steril            | BOOLEAN      | Sterilise (0/1)                      |
+| sexe              | VARCHAR      | Sexe (M/F)                           |
 
-✅ **Onboarding plus rapide**
-- Nouveaux développeurs comprennent l'architecture rapidement
-- Documentation en ligne du code
-- Guide unifié pour tous les fichiers
+### Table `RendezVous`
 
-✅ **Maintenance simplifiée**
-- Raison des choix de design expliquée
-- Points d'amélioration signalés
-- Points de rétro-compatibilité clairs
+| Colonne     | Type         | Description               |
+|-------------|--------------|---------------------------|
+| id_rdv      | INT (PK)     | Identifiant unique        |
+| id_animal   | INT (FK)     | Reference vers Animaux    |
+| titre       | VARCHAR      | Intitule du rendez-vous   |
+| date_debut  | DATETIME     | Date et heure de debut    |
+| date_fin    | DATETIME     | Date et heure de fin      |
 
-✅ **Sécurité renforcée**
-- Bonnes pratiques de sécurité documentées
-- Explications sur XSS, SQL injection, sessions
-- Validations et échappements clairs
+### Table `Prestations`
 
-✅ **Scalabilité facilitée**
-- Patterns de code documentés
-- Comment ajouter une nouvelle fonctionnalité
-- Conventions claires à suivre
+| Colonne        | Type         | Description                    |
+|----------------|--------------|--------------------------------|
+| id_prestation  | INT (PK)     | Identifiant unique             |
+| id_animal      | INT (FK)     | Reference vers Animaux         |
+| date_soin      | DATE         | Date de la prestation          |
+| type_soin      | VARCHAR      | Types de soins (separes par ,) |
+| prix           | DECIMAL      | Prix facture                   |
+| notes          | TEXT         | Observations                   |
 
----
+### Table `Utilisateurs`
 
-## 🚀 Prochaines Étapes
+| Colonne         | Type         | Description            |
+|-----------------|--------------|------------------------|
+| id_utilisateur  | INT (PK)     | Identifiant unique     |
+| identifiant     | VARCHAR      | Nom d'utilisateur      |
+| mot_de_passe    | VARCHAR      | Hash bcrypt du MDP     |
 
-1. **Implémenter les méthodes manquantes**
-   - `ClientController::delete()`
-   - `AnimalController::tracking()`
-   - Autres contrôleurs (AppointmentController, SettingsController)
+### Relations
 
-2. **Améliorer la sécurité**
-   - Remplacer tous les `header()` par `redirect()`
-   - Implémenter un vrai système de rôles/permissions
-   - Ajouter validation et sanitization
-
-3. **Tester complètement**
-   - Tester toutes les routes
-   - Tester l'authentification
-   - Tester les formulaires
-
-4. **Ajouter des logs**
-   - Logging des erreurs
-   - Audit trail des modifications
-   - Debug mode en développement
-
-5. **Performance**
-   - Caching des routes
-   - Optimisation des requêtes BD
-   - Minification des assets
+```
+Proprietaires (1) ---< (N) Animaux
+Animaux       (1) ---< (N) RendezVous
+Animaux       (1) ---< (N) Prestations
+```
 
 ---
 
-Tous les fichiers sont prêts pour la **production** ! 🎉
+## 5. Systeme de routage
+
+Les routes sont definies dans `app/routes.php` et gerees par `app/Core/Router.php`.
+
+### Liste des routes
+
+| Nom                  | Methode  | URL                          | Action                           |
+|----------------------|----------|------------------------------|----------------------------------|
+| home                 | GET      | /                            | Redirection accueil              |
+| login                | GET/POST | /auth/login                  | Connexion                        |
+| logout               | GET      | /auth/logout                 | Deconnexion                      |
+| clients.index        | GET      | /clients                     | Liste des clients                |
+| clients.create       | GET      | /clients/new                 | Formulaire nouveau client        |
+| clients.store        | POST     | /clients                     | Enregistrer nouveau client       |
+| clients.edit         | GET      | /clients/{id}/edit           | Formulaire edition client        |
+| clients.update       | POST     | /clients/{id}                | Mettre a jour un client          |
+| clients.delete       | POST     | /clients/{id}/delete         | Supprimer un client              |
+| animals.edit         | GET      | /animals/{id}/edit           | Formulaire edition animal        |
+| animals.update       | POST     | /animals/{id}                | Mettre a jour un animal          |
+| animals.tracking     | GET      | /animals/{id}/tracking       | Suivi toilettage de l'animal     |
+| appointments.index   | GET      | /appointments                | Calendrier des RDV               |
+| appointments.create  | POST     | /appointments                | Creer un RDV                     |
+| appointments.update  | POST     | /appointments/{id}           | Modifier un RDV                  |
+| appointments.delete  | POST     | /appointments/{id}/delete    | Supprimer un RDV                 |
+| settings.index       | GET/POST | /settings                    | Parametres                       |
+| invoices.generate    | GET      | /invoices/{id}/generate      | Generer une facture              |
+| invoices.download    | GET      | /invoices/{id}/download      | Telecharger une facture          |
+| prestations.store    | POST     | /animals/{id}/prestations    | Enregistrer une prestation       |
+
+### Generation d'URL
+
+```php
+// Generer une URL a partir du nom de la route
+route('clients.edit', ['id' => 5])   // => /clients/5/edit
+route('clients.index')               // => /clients
+
+// Redirection
+redirect('clients.index');
+redirect('clients.edit', ['id' => 5], ['success' => '1']);
+```
+
+---
+
+## 6. Controleurs
+
+Tous les controleurs heritent de `Controller` (app/Core/Controller.php) qui fournit :
+- `view($name, $data)` : rendre une vue avec des variables
+- `requireLogin()` : verifier l'authentification
+
+### AuthController
+
+| Methode          | Description                                           |
+|------------------|-------------------------------------------------------|
+| `redirectHome()` | Redirige vers le dashboard ou la page de connexion    |
+| `login()`        | GET : affiche le formulaire / POST : authentification |
+| `logout()`       | Detruit la session et redirige vers login             |
+
+### ClientController
+
+| Methode        | Description                                                  |
+|----------------|--------------------------------------------------------------|
+| `index()`      | Affiche la liste des clients avec recherche                  |
+| `create()`     | Affiche le formulaire d'ajout (nouveau ou existant)          |
+| `store()`      | Enregistre un nouveau proprietaire + animal                  |
+| `edit($id)`    | Affiche le formulaire de modification d'un client            |
+| `update($id)`  | Met a jour les informations d'un client                      |
+
+### AnimalController
+
+| Methode          | Description                                      |
+|------------------|--------------------------------------------------|
+| `edit($id)`      | Affiche le formulaire de modification             |
+| `update($id)`    | Met a jour les informations de l'animal           |
+| `tracking($id)`  | Affiche le suivi toilettage + historique soins     |
+
+### AppointmentController
+
+| Methode        | Description                          |
+|----------------|--------------------------------------|
+| `index()`      | Affiche le calendrier FullCalendar   |
+| `create()`     | Cree un nouveau rendez-vous          |
+| `update($id)`  | Modifie un rendez-vous existant      |
+| `delete($id)`  | Supprime un rendez-vous              |
+
+### PrestationController
+
+| Methode       | Description                                           |
+|---------------|-------------------------------------------------------|
+| `store($id)`  | Enregistre une prestation et lance la facturation      |
+
+### InvoiceController
+
+| Methode          | Description                                               |
+|------------------|-----------------------------------------------------------|
+| `generate($id)`  | Genere le PDF Factur-X et l'envoie a N2F                  |
+| `download($id)`  | Telecharge une facture existante                          |
+
+### SettingsController
+
+| Methode    | Description                                    |
+|------------|------------------------------------------------|
+| `index()`  | Affiche les parametres / change le mot de passe |
+
+---
+
+## 7. Modeles
+
+Tous les modeles utilisent des methodes statiques avec PDO et requetes preparees.
+
+### Client
+
+| Methode                      | Retour   | Description                              |
+|------------------------------|----------|------------------------------------------|
+| `getAllWithAnimaux($search)`  | array    | Tous les clients + animaux (filtrable)   |
+| `getAllProprietaires()`       | array    | Liste de tous les proprietaires          |
+| `createProprietaire($data)`  | int      | Creer un proprietaire (retourne l'ID)    |
+| `createAnimal($data)`        | int      | Creer un animal (retourne l'ID)          |
+| `findProprietaire($id)`      | ?array   | Trouver un proprietaire par ID           |
+| `updateProprietaire($id, $data)` | bool | Mettre a jour un proprietaire            |
+
+### Animal
+
+| Methode                      | Retour   | Description                              |
+|------------------------------|----------|------------------------------------------|
+| `getListForAppointments()`   | array    | Liste des animaux pour le calendrier     |
+| `findWithOwner($id)`         | ?array   | Animal + infos proprietaire              |
+| `update($id, $data)`         | bool     | Mettre a jour un animal                  |
+| `delete($id)`                | bool     | Supprimer un animal                      |
+
+### RendezVous
+
+| Methode                  | Retour   | Description                              |
+|--------------------------|----------|------------------------------------------|
+| `getToday()`             | array    | RDV du jour                              |
+| `getCalendarEvents()`    | array    | Tous les RDV (format FullCalendar)       |
+| `create($data)`          | int      | Creer un RDV                             |
+| `getById($id)`           | ?array   | Trouver un RDV par ID                    |
+| `update($id, $data)`     | bool     | Modifier un RDV                          |
+| `delete($id)`            | bool     | Supprimer un RDV                         |
+
+### Prestation
+
+| Methode           | Retour   | Description                        |
+|-------------------|----------|------------------------------------|
+| `create($data)`   | int      | Enregistrer une prestation         |
+
+### Soin
+
+| Methode                | Retour   | Description                            |
+|------------------------|----------|----------------------------------------|
+| `findByAnimal($id)`    | array    | Historique des soins d'un animal       |
+
+### User
+
+| Methode                    | Retour   | Description                        |
+|----------------------------|----------|------------------------------------|
+| `findById($id)`            | ?array   | Trouver un utilisateur par ID      |
+| `updatePassword($id, $hash)` | bool  | Mettre a jour le mot de passe      |
+
+---
+
+## 8. Vues
+
+| Fichier                        | Route                     | Description                                   |
+|--------------------------------|---------------------------|-----------------------------------------------|
+| `login_view.php`               | /auth/login               | Formulaire de connexion admin                 |
+| `liste_clients_view.php`       | /clients                  | Dashboard : liste clients + RDV du jour       |
+| `ajouter_client_view.php`      | /clients/new              | Ajout client (nouveau ou existant) + animal   |
+| `modifier_client_view.php`     | /clients/{id}/edit        | Edition des infos proprietaire                |
+| `modifier_animal_view.php`     | /animals/{id}/edit        | Edition des infos animal                      |
+| `calendrier_view.php`          | /appointments             | Agenda interactif (FullCalendar)              |
+| `suivi_toilettage_view.php`    | /animals/{id}/tracking    | Suivi soins + formulaire nouvelle visite      |
+| `facture_view.php`             | (interne)                 | Template HTML pour generation PDF             |
+| `parametres_view.php`          | /settings                 | Changement de mot de passe                    |
+
+---
+
+## 9. Fonctions utilitaires (Helpers)
+
+Fichier : `app/helpers.php` - charge automatiquement via Composer.
+
+| Fonction                             | Description                                      |
+|--------------------------------------|--------------------------------------------------|
+| `route($name, $params)`             | Genere une URL a partir d'un nom de route         |
+| `url($path)`                         | Genere une URL absolue pour un asset              |
+| `redirect($route, $params, $query)` | Redirige vers une route et arrete le script       |
+| `currentUrl()`                       | Retourne l'URL courante                           |
+| `isCurrentRoute($name)`             | Verifie si la route courante correspond           |
+| `param($key, $default)`             | Recupere un parametre GET/POST en securite        |
+| `e($value)`                          | Echappe le HTML (protection XSS)                 |
+| `flashMessage($type, $msg)`         | Stocke un message flash en session                |
+| `getFlashMessage($type)`            | Recupere et supprime un message flash             |
+| `getAllFlashMessages()`              | Recupere et supprime tous les messages flash      |
+| `can($permission)`                   | Verifie une permission (stub)                    |
+
+---
+
+## 10. Authentification
+
+Le systeme utilise les **sessions PHP**.
+
+**Processus de connexion :**
+
+1. L'utilisateur saisit identifiant + mot de passe
+2. Verification en base avec `password_verify()` (bcrypt)
+3. En cas de succes, variables de session definies :
+   - `$_SESSION['admin_connecte']` = true
+   - `$_SESSION['admin_id']` = ID utilisateur
+   - `$_SESSION['admin_nom']` = nom d'utilisateur
+4. Redirection vers `/clients`
+
+**Protection des routes :**
+
+Chaque controleur appelle `$this->requireLogin()` en debut de methode. Si l'utilisateur n'est pas connecte, il est redirige vers `/auth/login`.
+
+**Deconnexion :** `session_destroy()` puis redirection vers login.
+
+---
+
+## 11. Systeme de facturation
+
+### Flux complet
+
+```
+Suivi toilettage (/animals/{id}/tracking)
+    |
+    v
+Formulaire "Nouvelle visite"
+(date, soins, prix, notes)
+    |
+    v
+PrestationController@store
+(enregistre en BDD)
+    |
+    v
+InvoiceController@generate
+    |
+    |-- 1. Recupere les donnees (prestation + animal + proprietaire)
+    |-- 2. Genere le HTML depuis facture_view.php
+    |-- 3. Convertit en PDF via DomPDF
+    |-- 4. Cree le XML Factur-X
+    |-- 5. Combine PDF + XML (atgp/factur-x)
+    |-- 6. Sauvegarde dans /factures/
+    |-- 7. Envoie a N2F via API
+    |
+    v
+Redirection vers suivi avec message de succes
++ telechargement automatique du PDF
+```
+
+### Format des factures
+
+- **Nom de fichier :** `Facture_SweetyDog_{annee}-{id_prestation}.pdf`
+- **Format :** PDF avec XML Factur-X embarque (norme francaise)
+- **Stockage :** dossier `/factures/` a la racine du projet
+
+### Integration N2F
+
+- Cle API stockee dans `code.env` (`N2F_API_KEY`)
+- Envoi via CURL en multipart/form-data
+- Header : `Authorization: ApiKey {cle}`
+
+---
+
+## 12. Dependances externes
+
+### PHP (Composer)
+
+| Package          | Version | Usage                            |
+|------------------|---------|----------------------------------|
+| atgp/factur-x    | ^2.5    | Generation factures Factur-X     |
+| dompdf/dompdf    | ^3.1    | Conversion HTML vers PDF         |
+
+### JavaScript / CSS (CDN)
+
+| Bibliotheque     | Version | Usage                            |
+|------------------|---------|----------------------------------|
+| FullCalendar     | 6.1.10  | Calendrier interactif            |
+| Font Awesome     | 6.5.0   | Icones                           |
+
+---
+
+## 13. Configuration
+
+### Base de donnees (`config/db.php`)
+
+| Parametre | Valeur     |
+|-----------|------------|
+| Host      | localhost  |
+| Database  | mon_salon  |
+| User      | root       |
+| Password  | root       |
+
+### Autoloading (`composer.json`)
+
+Les classes sont chargees automatiquement via le classmap Composer :
+- `app/Core/`
+- `app/Controllers/`
+- `app/Models/`
+- `app/Services/`
+- `app/helpers.php` (fichier auto-inclus)
+
+---
+
+## 14. Securite
+
+| Mesure                     | Implementation                                        |
+|----------------------------|-------------------------------------------------------|
+| Injection SQL              | Requetes preparees PDO avec parametres nommes         |
+| XSS                        | `htmlspecialchars()` via le helper `e()`              |
+| Mots de passe              | Hash bcrypt (`password_hash` / `password_verify`)     |
+| Sessions                   | `session_destroy()` a la deconnexion                  |
+| Telechargement factures    | Verification d'authentification avant acces           |
+| Donnees formulaires        | Validation et nettoyage (`trim`, cast, controles)     |

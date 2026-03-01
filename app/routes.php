@@ -109,6 +109,12 @@ return [
      * Traite le formulaire POST
      */
     ['name' => 'animals.update', 'method' => 'POST', 'action' => 'AnimalController@update', 'pattern' => '/animals/{id}'],
+
+    /**
+     * Suppression d'un animal
+     * {id} = ID de l'animal à supprimer
+     */
+    ['name' => 'animals.delete', 'method' => 'POST', 'action' => 'AnimalController@delete', 'pattern' => '/animals/{id}/delete'],
     
     /**
      * Suivi des toilettages d'un animal
@@ -131,6 +137,12 @@ return [
     ['name' => 'appointments.create', 'method' => 'POST', 'action' => 'AppointmentController@create', 'pattern' => '/appointments'],
     
     /**
+     * Mise à jour d'un rendez-vous
+     * {id} = ID du rendez-vous à modifier
+     */
+    ['name' => 'appointments.update', 'method' => 'POST', 'action' => 'AppointmentController@update', 'pattern' => '/appointments/{id}'],
+
+    /**
      * Suppression d'un rendez-vous
      * {id} = ID du rendez-vous à supprimer
      */
@@ -143,10 +155,27 @@ return [
      */
     ['name' => 'settings.index', 'method' => 'GET|POST', 'action' => 'SettingsController@index', 'pattern' => '/settings'],
 
+    // ========== DÉCLARATION / STATISTIQUES ==========
+    /**
+     * Page de déclaration avec graphiques CA
+     * Affiche le chiffre d'affaires par mois avec camembert
+     */
+    ['name' => 'declaration.index', 'method' => 'GET', 'action' => 'DeclarationController@index', 'pattern' => '/declaration'],
+    ['name' => 'declaration.monthly', 'method' => 'GET|POST', 'action' => 'DeclarationController@monthlyRevenue', 'pattern' => '/declaration/mensuel'],
+    ['name' => 'declaration.invoices', 'method' => 'GET', 'action' => 'DeclarationController@invoices', 'pattern' => '/declaration/factures'],
+    ['name' => 'declaration.invoices.open', 'method' => 'GET', 'action' => 'DeclarationController@openInvoice', 'pattern' => '/declaration/factures/open'],
+
+    // ========== FACTURATION ==========
+    ['name' => 'facturation.index', 'method' => 'GET', 'action' => 'FactureController@index', 'pattern' => '/facturation'],
+    ['name' => 'facturation.store', 'method' => 'POST', 'action' => 'FactureController@store', 'pattern' => '/facturation'],
+    ['name' => 'facturation.animaux', 'method' => 'GET', 'action' => 'FactureController@animaux', 'pattern' => '/facturation/animaux/{id}'],
+
     ['name' => 'invoices.generate', 'method' => 'GET', 'action' => 'InvoiceController@generate', 'pattern' => '/invoices/{id}/generate'],
+    ['name' => 'invoices.email', 'method' => 'GET', 'action' => 'InvoiceController@email', 'pattern' => '/invoices/{id}/email'],
 
 
     //prestation
     ['name' => 'prestations.store','method' => 'POST','action' => 'PrestationController@store','pattern' => '/animals/{id}/prestations'],
 
+    ['name' => 'invoices.download', 'method' => 'GET', 'action' => 'InvoiceController@download', 'pattern' => '/invoices/{id}/download'],
 ];

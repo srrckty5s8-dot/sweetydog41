@@ -26,7 +26,8 @@ foreach ($clients as $c) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SweetyDog - Gestion Salon</title>
 
-    <link rel="stylesheet" href="/sweetydog/assets/style.css">
+    <link rel="stylesheet" href="/assets/style.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
@@ -243,11 +244,12 @@ foreach ($clients as $c) {
         table{
             width:100%;
             border-collapse:collapse;
-            table-layout:fixed;
         }
 
-        th:nth-child(2), td:nth-child(2){ width: var(--tbl-col-2); }
-        th:nth-child(4), td:nth-child(4){ width: var(--tbl-col-4); }
+        th:nth-child(2), td:nth-child(2){ width: 160px; }
+        th:nth-child(3), td:nth-child(3){ width: 120px; }
+        th:nth-child(4), td:nth-child(4){ width: 180px; }
+        th:nth-child(5), td:nth-child(5){ width: 100px; }
 
         th{
             text-align:left;
@@ -276,21 +278,25 @@ foreach ($clients as $c) {
         }
 
         .dog-indent{ padding-left:45px !important; position:relative; }
-        .dog-indent::before{
-            content:"↳";
-            position:absolute;
-            left:25px;
-            color:#cbd5e1;
-        }
 
         .info-tag{
-            padding:4px 10px;
-            border-radius:8px;
-            font-size:.8rem;
-            font-weight:700;
-            background:#eef2f7;
-            color:#4a5568;
+            padding:5px 12px;
+            border-radius:20px;
+            font-size:.78rem;
+            font-weight:600;
+            background:#f0fdf4;
+            color: var(--vert-fonce);
             display:inline-block;
+            border: 1px solid #d1e7dd;
+            letter-spacing: 0.2px;
+        }
+        .info-tag-sexe{
+            padding:5px 10px;
+            border-radius:20px;
+            font-size:.78rem;
+            font-weight:700;
+            display:inline-block;
+            white-space:nowrap;
         }
 
         .btn-patte{
@@ -354,6 +360,226 @@ foreach ($clients as $c) {
             align-items:center;
             gap:8px;
         }
+
+        /* ============================
+           RESPONSIVE MOBILE
+           ============================ */
+        @media (max-width: 600px) {
+            body {
+                background: linear-gradient(180deg, #edf7f1 0%, #f8fafc 45%, #f4f7f6 100%);
+            }
+            .container-large {
+                padding: 12px !important;
+                border-radius: 18px !important;
+                border: 1px solid #e1ece5;
+                box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+            }
+
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .brand h2 { font-size: 1.2rem; }
+            .top-nav {
+                gap: 8px;
+                width: 100%;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 4px;
+                -webkit-overflow-scrolling: touch;
+            }
+            .top-nav::-webkit-scrollbar { display: none; }
+            .top-nav a {
+                font-size: 0.78rem;
+                flex: 0 0 auto;
+                background: #fff;
+                border: 1px solid #dce8e1;
+                border-radius: 999px;
+                padding: 8px 12px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            }
+            .top-nav a[style*="#e63946"] {
+                background: #fff5f5;
+                border-color: #fecaca;
+            }
+
+            .dashboard-grid { grid-template-columns: 1fr !important; gap: 15px; }
+
+            .clients-actionbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+                background: linear-gradient(180deg, #ffffff 0%, #f5fbf7 100%);
+                padding: 12px;
+                border-radius: 14px;
+                border: 1px solid #e6efe9;
+                position: sticky;
+                top: 8px;
+                z-index: 7;
+                box-shadow: 0 8px 22px rgba(15, 23, 42, 0.07);
+            }
+            .clients-actions-right {
+                min-width: 0 !important;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .clients-search { min-width: 0 !important; width: 100% !important; }
+            .clients-btn-new { width: 100% !important; justify-content: center !important; }
+
+            /* Tableau en mode carte */
+            .table-container { overflow-x: auto; }
+            table, thead, tbody, th, td, tr { display: block; }
+            thead { display: none; }
+
+            tr {
+                margin-bottom: 10px;
+                border: 1px solid #f1f5f9;
+                border-radius: 12px;
+                overflow: hidden;
+                background: white;
+            }
+            tr.row-proprio {
+                background: #f0fdf4;
+                border: 1px solid #d1e7dd;
+            }
+
+            td {
+                padding: 8px 15px !important;
+                border-bottom: none !important;
+                text-align: left !important;
+                position: relative;
+            }
+
+            /* Cacher les cellules vides */
+            td:empty { display: none; padding: 0 !important; }
+
+            .dog-indent { padding-left: 15px !important; }
+
+            .btn-patte { width: 34px; height: 34px; }
+
+            /* Sexe et Race sur la même ligne dans les cartes animaux */
+            .info-tag { font-size: 0.72rem; padding: 3px 8px; }
+            .info-tag-sexe { font-size: 0.72rem; padding: 3px 8px; }
+
+            .proprio-name { font-size: 0.95rem; }
+
+            /* Agenda card */
+            .agenda-card { padding: 15px; }
+            .agenda-card h3 { font-size: 0.8rem !important; }
+
+            /* Modal */
+            .modal-card { padding: 15px; width: 95%; }
+            .btn-action { padding: 8px 12px; font-size: 0.85rem; }
+
+            /* Refonte visuelle de la liste clients en cartes */
+            .table-container {
+                background: transparent !important;
+                border: none !important;
+                overflow: visible !important;
+            }
+            tbody {
+                display: block;
+            }
+
+            tbody tr.row-proprio {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                margin: 0 0 6px 0 !important;
+                border-radius: 14px !important;
+                border: 1px solid #d7e8dc !important;
+                background: linear-gradient(180deg, #f0fdf4 0%, #e9f9ef 100%) !important;
+                box-shadow: 0 8px 18px rgba(15,23,42,0.06);
+            }
+            tbody tr.row-proprio td {
+                padding: 9px 12px !important;
+                border: none !important;
+            }
+            tbody tr.row-proprio td:nth-child(2),
+            tbody tr.row-proprio td:nth-child(3),
+            tbody tr.row-proprio td:nth-child(5) {
+                display: none !important;
+            }
+            tbody tr.row-proprio td:nth-child(4) {
+                background: rgba(255,255,255,0.75);
+                border: 1px dashed #c8d9cc !important;
+                border-radius: 10px;
+                margin: 0 12px 10px 12px;
+                padding: 8px 10px !important;
+            }
+            .proprio-name {
+                font-size: 0.98rem;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            tbody tr:not(.row-proprio) {
+                display: grid !important;
+                grid-template-columns: 1fr auto !important;
+                grid-template-areas:
+                    "name action"
+                    "race sexe";
+                gap: 6px 10px;
+                margin: 0 0 10px 12px !important;
+                border: 1px solid #e6eef3 !important;
+                border-left: 4px solid #d1e7dd !important;
+                border-radius: 12px !important;
+                background: #ffffff !important;
+                box-shadow: 0 8px 16px rgba(15,23,42,0.05);
+            }
+            tbody tr:not(.row-proprio) td {
+                border: none !important;
+                padding: 8px 10px !important;
+            }
+            tbody tr:not(.row-proprio) td:nth-child(1) { grid-area: name; }
+            tbody tr:not(.row-proprio) td:nth-child(2) { grid-area: race; padding-top: 0 !important; }
+            tbody tr:not(.row-proprio) td:nth-child(3) { grid-area: sexe; padding-top: 0 !important; }
+            tbody tr:not(.row-proprio) td:nth-child(4) { display: none !important; }
+            tbody tr:not(.row-proprio) td:nth-child(5) {
+                grid-area: action;
+                align-self: start;
+                justify-self: end;
+            }
+            .dog-indent {
+                padding-left: 10px !important;
+                font-size: 0.96rem;
+            }
+            .info-tag,
+            .info-tag-sexe {
+                display: inline-flex !important;
+                align-items: center;
+                justify-content: center;
+                min-height: 26px;
+                border-radius: 999px !important;
+                font-size: 0.72rem !important;
+                font-weight: 700 !important;
+            }
+            .btn-patte {
+                width: 38px;
+                height: 38px;
+                border-radius: 11px;
+                box-shadow: 0 6px 14px rgba(45,106,79,0.25);
+            }
+
+            .agenda-card {
+                margin-top: 8px;
+                border-radius: 14px;
+                border: 1px solid #e4efe8;
+                box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+            }
+            .rdv-item {
+                border-radius: 10px;
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .top-nav { gap: 8px; }
+            .top-nav a { font-size: 0.75rem; }
+            .brand h2 { font-size: 1rem; }
+            .stats-val { font-size: 1.3rem; }
+        }
     </style>
 </head>
 <body>
@@ -364,16 +590,25 @@ foreach ($clients as $c) {
         <div class="alert alert-success">✅ Client modifié.</div>
     <?php endif; ?>
 
+    <?php if (!empty($_GET['success']) && $_GET['success'] === 'deleted'): ?>
+        <div class="alert alert-success">✅ Client supprimé.</div>
+    <?php endif; ?>
+
+    <?php if (!empty($_GET['error']) && $_GET['error'] === 'delete_failed'): ?>
+        <div class="alert alert-error">❌ Suppression impossible.</div>
+    <?php endif; ?>
+
     <div class="top-bar">
         <div class="brand"><h2>🐾 SweetyDog</h2></div>
         <div class="top-nav">
             <a href="<?= htmlspecialchars(route('appointments.index')) ?>">📅 Agenda</a>
-
+            <a href="<?= htmlspecialchars(route('facturation.index')) ?>">🧾 Facturation</a>
+            <a href="<?= htmlspecialchars(route('declaration.index')) ?>">📊 Déclaration</a>
             <a href="<?= htmlspecialchars(route('settings.index')) ?>">⚙️ Paramètres</a>
 
         
 
-            <a href="<?= route('logout') ?>" style="color: #e63946;">❌ Quitter</a>
+            <a href="<?= route('logout') ?>" style="color: #e63946;"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a>
         </div>
     </div>
 
@@ -388,7 +623,7 @@ foreach ($clients as $c) {
                 </div>
 
                 <div class="clients-actions-right">
-                    <form action="<?= route('clients.index') ?>" method="GET" class="clients-search">
+                    <div class="clients-search">
 
   <svg class="clients-search-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -396,17 +631,15 @@ foreach ($clients as $c) {
   </svg>
 
   <input type="text"
-         name="search"
+         id="live-search-input"
          class="clients-search-input"
          placeholder="Rechercher..."
-         value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+         autocomplete="off">
 
-  <?php if (!empty($_GET['search'])): ?>
-    <a class="clients-search-clear"
-       href="<?= route('clients.index') ?>"
-       aria-label="Effacer la recherche">×</a>
-  <?php endif; ?>
-</form>
+  <a class="clients-search-clear" id="live-search-clear"
+     href="#" style="display:none;"
+     aria-label="Effacer la recherche">×</a>
+</div>
 
                     <a href="<?= route('clients.create') ?>" class="clients-btn-new">
                         <span>+</span> NOUVEAU
@@ -420,6 +653,7 @@ foreach ($clients as $c) {
                     <tr>
                         <th>Propriétaire / Animal</th>
                         <th>Race</th>
+                        <th>Sexe</th>
                         <th>Contact</th>
                         <th style="text-align:right;">Action</th>
                     </tr>
@@ -427,7 +661,7 @@ foreach ($clients as $c) {
                     <tbody>
                     <?php if (empty($groupes)): ?>
                         <tr>
-                            <td colspan="4" style="text-align:center; padding:40px; color:#94a3b8;">
+                            <td colspan="5" style="text-align:center; padding:40px; color:#94a3b8;">
                                 Aucun résultat trouvé.
                             </td>
                         </tr>
@@ -437,13 +671,11 @@ foreach ($clients as $c) {
                         <tr class="row-proprio">
                             <td>
                                 <span class="proprio-name"
-                                      onclick="openClientInfo(
-                                          <?= (int)$data['id'] ?>,
-                                          '<?= addslashes($data['prenom'] . ' ' . $data['nom']) ?>',
-                                          '<?= addslashes($data['telephone']) ?>',
-                                          '<?= addslashes($data['email'] ?? '') ?>',
-                                          '<?= addslashes($data['adresse'] ?? '') ?>'
-                                      )">
+                                      data-id="<?= (int)$data['id'] ?>"
+                                      data-name="<?= htmlspecialchars($data['prenom'] . ' ' . $data['nom']) ?>"
+                                      data-tel="<?= htmlspecialchars($data['telephone'] ?? '') ?>"
+                                      data-email="<?= htmlspecialchars($data['email'] ?? '') ?>"
+                                      data-adresse="<?= htmlspecialchars(str_replace("\n", ' - ', $data['adresse'] ?? '')) ?>">
                                     👤 <?= htmlspecialchars($data['prenom'] . ' ' . $data['nom']); ?>
                                     <small style="font-weight:600; color:#888; font-size:.8rem;">
                                         (<?= count($data['animaux']); ?>)
@@ -452,32 +684,46 @@ foreach ($clients as $c) {
                             </td>
 
                             <td></td>
+                            <td></td>
 
                             <td style="font-family: monospace; font-weight: 800; color: var(--vert-fonce);">
-                                📞 <?= htmlspecialchars($data['telephone']); ?>
+                                📞 <?= htmlspecialchars(wordwrap($data['telephone'], 2, ' ', true)); ?>
                             </td>
 
-                            <td style="text-align:right;">
-                                <a class="btn-patte"
-                                   href="<?= route('clients.edit', ['id' => $data['id']]) ?>"
-                                   title="Modifier le client">✏️</a>
-                            </td>
+                            <td></td>
                         </tr>
 
                         <?php foreach ($data['animaux'] as $animal): ?>
                             <tr>
                                 <td class="dog-indent">
+                                    <?php
+                                        $espece = strtolower($animal['espece'] ?? '');
+                                        if ($espece === 'chat') {
+                                            $icone = '<i class="fa-solid fa-cat" style="color:#94a3b8; margin-right:6px;"></i>';
+                                        } elseif ($espece === 'lapin') {
+                                            $icone = '🐰';
+                                        } else {
+                                            $icone = '<i class="fa-solid fa-dog" style="color:#94a3b8; margin-right:6px;"></i>';
+                                        }
+                                    ?>
                                     <a href="<?= route('animals.edit', ['id' => $animal['id_animal']]) ?>"
                                        style="text-decoration:none; color: inherit;">
-                                        <strong><?= htmlspecialchars($animal['nom_animal']); ?></strong>
+                                        <?= $icone ?> <strong><?= htmlspecialchars($animal['nom_animal']); ?></strong>
                                     </a>
                                 </td>
                                 <td>
-                                    <span class="info-tag">🧬 <?= htmlspecialchars($animal['race'] ?: 'Non précisée'); ?></span>
+                                    <span class="info-tag"><?= htmlspecialchars($animal['race'] ?: 'Non précisée'); ?></span>
+                                </td>
+                                <td>
+                                    <?php if (!empty($animal['sexe'])): ?>
+                                        <span class="info-tag-sexe" style="<?= $animal['sexe'] === 'M' ? 'background:#dbeafe; color:#1e40af; border:1px solid #bfdbfe;' : 'background:#fce7f3; color:#be185d; border:1px solid #fbcfe8;' ?>">
+                                            <?= $animal['sexe'] === 'M' ? '♂ Mâle' : '♀ Femelle' ?>
+                                        </span>
+                                    <?php endif; ?>
                                 </td>
                                 <td></td>
                                 <td style="text-align:right;">
-                                    <a href="<?= route('animals.tracking', ['id' => $animal['id_animal']]) ?>" 
+                                    <a href="<?= route('animals.tracking', ['id' => $animal['id_animal']]) ?>"
    class="btn-patte" title="Suivi toilettage">
     <i class="fa-solid fa-paw"></i>
 </a>
@@ -523,7 +769,7 @@ foreach ($clients as $c) {
     <div class="modal-card">
         <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
             <h3 id="ci_title" style="margin:0;">👤 Infos client</h3>
-            <button type="button" onclick="closeClientInfo()" class="modal-close">×</button>
+            <button type="button" class="btn-action" onclick="closeClientInfo()" style="background:#fff; border:1px solid #ddd; color:#333;">Fermer</button>
         </div>
 
         <div style="margin-top:12px; line-height:1.6;">
@@ -536,7 +782,7 @@ foreach ($clients as $c) {
             <a id="ci_call" class="btn-action" href="#" style="background:var(--vert-fonce); color:white; border:none;">📞 Appel</a>
             <a id="ci_mail" class="btn-action" href="#" style="background:#0ea5e9; color:white; border:none;">✉️ Mail</a>
             <a id="ci_edit" class="btn-action" href="#" style="background:#111827; color:white; border:none;">✏️ Modifier</a>
-            <button type="button" class="btn-action" onclick="closeClientInfo()" style="background:#fff; border:1px solid #e5e7eb;">Fermer</button>
+            
         </div>
     </div>
 </div>
@@ -544,10 +790,15 @@ foreach ($clients as $c) {
 <script>
     const editTemplate = <?= json_encode(route('clients.edit', ['id' => '__ID__'])) ?>;
 
+    function formatTel(t) {
+        var digits = t.replace(/\s+/g, '');
+        return digits.replace(/(.{2})/g, '$1 ').trim();
+    }
+
     function openClientInfo(id, fullName, tel, email, adresse){
         document.getElementById('ci_title').textContent = '👤 ' + (fullName || 'Infos client');
 
-        document.getElementById('ci_tel').textContent = tel ? tel : 'Non renseigné';
+        document.getElementById('ci_tel').textContent = tel ? formatTel(tel) : 'Non renseigné';
         document.getElementById('ci_email').textContent = email ? email : 'Non renseigné';
         document.getElementById('ci_adresse').textContent = adresse ? adresse : 'Non renseignée';
 
@@ -579,6 +830,19 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
+    // Clic sur les noms de propriétaires
+    document.querySelectorAll('.proprio-name').forEach(function(el) {
+        el.addEventListener('click', function() {
+            openClientInfo(
+                parseInt(this.dataset.id),
+                this.dataset.name,
+                this.dataset.tel,
+                this.dataset.email,
+                this.dataset.adresse
+            );
+        });
+    });
+
     // Fermer si clic sur l'overlay
     modal.addEventListener('click', function(e){
         if (e.target === this) closeClientInfo();
@@ -588,6 +852,105 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('keydown', function(e){
         if (e.key === 'Escape') closeClientInfo();
     });
+
+    // ===== RECHERCHE EN TEMPS RÉEL =====
+    var searchInput = document.getElementById('live-search-input');
+    var clearBtn = document.getElementById('live-search-clear');
+    var tbody = document.querySelector('.table-container tbody');
+
+    if (searchInput && clearBtn && tbody) {
+        function norm(str) {
+            var value = (str || '').toLowerCase();
+            if (typeof value.normalize === 'function') {
+                value = value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            }
+            return value;
+        }
+
+        var rows = Array.from(tbody.querySelectorAll('tr'));
+        var groups = [];
+        var currentGroup = null;
+
+        rows.forEach(function(row) {
+            if (row.classList.contains('row-proprio')) {
+                currentGroup = { owner: row, animals: [] };
+                groups.push(currentGroup);
+                return;
+            }
+
+            if (currentGroup) {
+                currentGroup.animals.push(row);
+            }
+        });
+
+        function showRow(row, visible) {
+            if (visible) {
+                row.style.removeProperty('display');
+                row.removeAttribute('aria-hidden');
+                return;
+            }
+
+            // En mobile certaines règles CSS utilisent `display: ... !important`.
+            // On force donc aussi `none !important` pour que le filtre reste fiable.
+            row.style.setProperty('display', 'none', 'important');
+            row.setAttribute('aria-hidden', 'true');
+        }
+
+        function filterClients() {
+            var query = norm(searchInput.value.trim());
+            clearBtn.style.display = query ? 'flex' : 'none';
+
+            groups.forEach(function(group) {
+                var ownerText = norm(group.owner.textContent);
+                var ownerMatches = query === '' || ownerText.indexOf(query) !== -1;
+
+                if (query === '') {
+                    showRow(group.owner, true);
+                    group.animals.forEach(function(animalRow) {
+                        showRow(animalRow, true);
+                    });
+                    return;
+                }
+
+                if (ownerMatches) {
+                    showRow(group.owner, true);
+                    group.animals.forEach(function(animalRow) {
+                        showRow(animalRow, true);
+                    });
+                    return;
+                }
+
+                var hasAnimalMatch = false;
+                group.animals.forEach(function(animalRow) {
+                    var matches = norm(animalRow.textContent).indexOf(query) !== -1;
+                    showRow(animalRow, matches);
+                    if (matches) {
+                        hasAnimalMatch = true;
+                    }
+                });
+
+                showRow(group.owner, hasAnimalMatch);
+            });
+        }
+
+        // Mobile (iOS/Android): certains claviers prédictifs ne déclenchent pas
+        // toujours "input" de manière fiable, on écoute plusieurs événements.
+        function bindLiveSearch() {
+            ['input', 'beforeinput', 'textInput', 'keyup', 'change', 'search', 'compositionend'].forEach(function(evt) {
+                searchInput.addEventListener(evt, filterClients);
+            });
+        }
+        bindLiveSearch();
+
+        clearBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            searchInput.value = '';
+            filterClients();
+            searchInput.focus();
+        });
+
+        filterClients();
+    }
 
 });
 </script>

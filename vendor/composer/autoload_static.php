@@ -168,15 +168,20 @@ class ComposerStaticInit99d45ceaef661ebbec01dabc3550cdbd
     public static $classMap = array (
         'Animal' => __DIR__ . '/../..' . '/app/Models/Animal.php',
         'AnimalController' => __DIR__ . '/../..' . '/app/Controllers/AnimalController.php',
+        'AppointmentController' => __DIR__ . '/../..' . '/app/Controllers/AppointmentController.php',
         'AuthController' => __DIR__ . '/../..' . '/app/Controllers/AuthController.php',
         'Client' => __DIR__ . '/../..' . '/app/Models/Client.php',
         'ClientController' => __DIR__ . '/../..' . '/app/Controllers/ClientController.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Controller' => __DIR__ . '/../..' . '/app/Core/Controller.php',
         'Database' => __DIR__ . '/../..' . '/app/Core/Database.php',
+        'Declaration' => __DIR__ . '/../..' . '/app/Models/Declaration.php',
+        'DeclarationController' => __DIR__ . '/../..' . '/app/Controllers/DeclarationController.php',
+        'FactureController' => __DIR__ . '/../..' . '/app/Controllers/FactureController.php',
         'Dompdf\\Cpdf' => __DIR__ . '/..' . '/dompdf/dompdf/lib/Cpdf.php',
         'FPDF' => __DIR__ . '/..' . '/setasign/fpdf/fpdf.php',
         'InvoiceController' => __DIR__ . '/../..' . '/app/Controllers/InvoiceController.php',
+        'PisteService' => __DIR__ . '/../..' . '/app/Services/PisteService.php',
         'Prestation' => __DIR__ . '/../..' . '/app/Models/Prestation.php',
         'PrestationController' => __DIR__ . '/../..' . '/app/Controllers/PrestationController.php',
         'RendezVous' => __DIR__ . '/../..' . '/app/Models/RendezVous.php',
@@ -264,7 +269,9 @@ class ComposerStaticInit99d45ceaef661ebbec01dabc3550cdbd
         'Safe\\Exceptions\\YazException' => __DIR__ . '/..' . '/thecodingmachine/safe/generated/Exceptions/YazException.php',
         'Safe\\Exceptions\\ZipException' => __DIR__ . '/..' . '/thecodingmachine/safe/generated/Exceptions/ZipException.php',
         'Safe\\Exceptions\\ZlibException' => __DIR__ . '/..' . '/thecodingmachine/safe/generated/Exceptions/ZlibException.php',
+        'SettingsController' => __DIR__ . '/../..' . '/app/Controllers/SettingsController.php',
         'Soin' => __DIR__ . '/../..' . '/app/Models/Soin.php',
+        'User' => __DIR__ . '/../..' . '/app/Models/User.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

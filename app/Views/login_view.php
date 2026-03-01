@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion | SweetyDog</title>
-    <link rel="stylesheet" href="<?= htmlspecialchars(url('assets/style.css')) ?>">
+    <link rel="stylesheet" href="<?= htmlspecialchars(url('/assets/style.css')) ?>">
     <style>
         :root {
             --vert-fonce: #1b4332;
@@ -14,10 +14,10 @@
 
         body {
             margin: 0;
-            padding: 0;
+            padding: 16px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, var(--vert-fonce) 0%, var(--vert-moyen) 100%);
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -113,6 +113,26 @@
             margin-top: 25px;
             font-size: 0.75rem;
             color: #bdc3c7;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+                align-items: stretch;
+            }
+
+            .login-container {
+                max-width: 100%;
+                margin: auto 0;
+                padding: 24px 16px;
+                border-radius: 14px;
+            }
+
+            .logo-area { font-size: 2.4rem; }
+            h1 { font-size: 1.45rem; }
+            p.subtitle { margin-bottom: 18px; font-size: 0.85rem; }
+            .form-group { margin-bottom: 14px; }
+            .btn-submit { padding: 12px; }
         }
     </style>
 </head>

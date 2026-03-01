@@ -25,6 +25,10 @@
 // Utilisée pour l'authentification, les messages flash, etc.
 session_start();
 
+// ========== ENCODAGE UTF-8 ==========
+mb_internal_encoding('UTF-8');
+mb_http_output('UTF-8');
+
 // ========== 2. ENREGISTRER L'AUTOLOADER COMPOSER ==========
 /**
  * Chargement automatique des classes via Composer

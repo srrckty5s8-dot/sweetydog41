@@ -38,20 +38,28 @@ $GLOBALS['router'] = null;
  * Ou dans un formulaire :
  * <form action="<?php echo route('clients.store'); ?>" method="POST">
  * 
- * @param string $name   - Nom unique de la route (ex: 'clients.edit')
- * @param array  $params - Paramètres à injecter dans l'URL (ex: ['id' => 5])
+ * @param string $name        - Nom unique de la route (ex: 'clients.edit')
+ * @param array  $params      - Paramètres à injecter dans l'URL (ex: ['id' => 5])
+ * @param array  $queryParams - Paramètres GET optionnels (ex: ['from' => 'facturation'])
  * @return string        - URL générée (ex: '/clients/5/edit')
  * @throws Exception     - Si la route n'existe pas
  */
-function route($name, $params = [])
+function route($name, $params = [], $queryParams = [])
 {
     // Vérifier que le routeur est initialisé (ce qui se fait dans public/index.php)
     if (!isset($GLOBALS['router'])) {
         throw new Exception("Router non initialisé");
     }
-    
+
     // Déléguer au routeur pour générer l'URL
-    return $GLOBALS['router']->route($name, $params);
+    $url = $GLOBALS['router']->route($name, $params);
+
+    if (!empty($queryParams)) {
+        $separator = (strpos($url, '?') === false) ? '?' : '&';
+        $url .= $separator . http_build_query($queryParams);
+    }
+
+    return $url;
 }
 
 /**
@@ -60,6 +68,7 @@ function route($name, $params = [])
  * Utile pour :
  * - Les inclusions CSS/JS : url('assets/style.css')
  * - Les images : url('images/logo.png')
+ * - Les fichiers PDF : url('factures/Facture_123.pdf')
  * - Obtenir l'URL complète d'une ressource
  * 
  * Détecte automatiquement le basePath selon l'installation
@@ -67,41 +76,49 @@ function route($name, $params = [])
  * 
  * Exemple :
  * <link rel="stylesheet" href="<?php echo url('assets/style.css'); ?>">
+ * <a href="<?php echo url('factures/invoice.pdf'); ?>">Télécharger</a>
  * 
  * @param string $path - Chemin relatif (ex: 'assets/style.css')
  * @return string      - URL absolue (ex: '/Sweetydog/assets/style.css')
  */
 function url($path = '')
 {
-    // Récupérer le dossier contenant index.php
-    $scriptPath = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/');
+    // ✅ CORRECTION : Utiliser la même logique que Router::route()
+    // pour garantir la cohérence du basePath
+    
+    $basePath = str_replace('\\', '/', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
     $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '';
+    $normalizedBasePath = strtolower($basePath);
     
-    // Retirer /public si l'URL ne contient pas ce segment
-    if ($scriptPath !== '' && substr($scriptPath, -7) === '/public') {
-        $publicPath = $scriptPath;
-        $basePath = $publicPath;
-        if ($requestPath === '' || strpos($requestPath, $publicPath) !== 0) {
-            $basePath = substr($publicPath, 0, -7);
+    // Si on est dans /public, déterminer si on doit utiliser /public ou le dossier parent
+    if ($basePath !== '' && substr($normalizedBasePath, -7) === '/public') {
+        $publicPath = $basePath;
+        $resolvedPath = $publicPath;
+        
+        // Si l'URL actuelle ne contient pas /public, utiliser le dossier parent
+        if ($requestPath === '' || strpos(strtolower($requestPath), strtolower($publicPath)) !== 0) {
+            $resolvedPath = substr($publicPath, 0, -7);
         }
-        $scriptPath = $basePath;
+        $basePath = $resolvedPath;
     }
-
-    // Ne pas ajouter le basePath si on est à la racine
-    $basePath = $scriptPath !== '/' ? $scriptPath : '';
     
-    // Retourner le chemin complet
-    return $basePath . '/' . ltrim($path, '/');
+    // Construire l'URL complète
+    if ($basePath && $basePath !== '/') {
+        return $basePath . '/' . ltrim($path, '/');
+    }
+    
+    return '/' . ltrim($path, '/');
 }
 
 /**
  * Redirige vers une route ou une URL
  * 
  * Exemples :
- * - redirect('clients.index')                    → Redirige vers /clients
- * - redirect('clients.edit', ['id' => 5])       → Redirige vers /clients/5/edit
- * - redirect('/absolute/path')                   → Redirige vers /absolute/path
- * - redirect('https://example.com')              → Redirige vers URL externe
+ * - redirect('clients.index')                                    → Redirige vers /clients
+ * - redirect('clients.edit', ['id' => 5])                       → Redirige vers /clients/5/edit
+ * - redirect('animals.tracking', ['id' => 5], ['success' => 1]) → Redirige vers /animals/5/tracking?success=1
+ * - redirect('/absolute/path')                                   → Redirige vers /absolute/path
+ * - redirect('https://example.com')                              → Redirige vers URL externe
  * 
  * Utilisé après une action (créer, modifier, supprimer) :
  * 
@@ -110,10 +127,11 @@ function url($path = '')
  *     redirect('clients.index');
  * }
  * 
- * @param string $route - Nom de la route ou URL complète
- * @param array  $params - Paramètres pour générer l'URL (si c'est une route nommée)
+ * @param string $route       - Nom de la route ou URL complète
+ * @param array  $params      - Paramètres pour générer l'URL (si c'est une route nommée)
+ * @param array  $queryParams - Paramètres GET optionnels (ex: ['success' => 1])
  */
-function redirect($route, $params = [])
+function redirect($route, $params = [], $queryParams = [])
 {
     // Déterminer si c'est une URL absolue ou une route nommée
     // URLs absolues : commencent par / ou http://
@@ -122,10 +140,16 @@ function redirect($route, $params = [])
         ? $route                           // C'est une URL absolue, l'utiliser telle quelle
         : route($route, $params);          // C'est une route nommée, générer l'URL
     
+    // ✅ Ajouter les paramètres GET si fournis
+    if (!empty($queryParams)) {
+        $url .= '?' . http_build_query($queryParams);
+    }
+    
     // Envoyer le header de redirection et arrêter l'exécution
     header('Location: ' . $url);
     exit;
 }
+
 
 /**
  * Retourne l'URL actuelle (relative au basePath)

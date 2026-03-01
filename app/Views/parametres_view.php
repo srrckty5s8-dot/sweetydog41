@@ -2,18 +2,49 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paramètres | SweetyDog</title>
-    <link rel="stylesheet" href="<?= htmlspecialchars(url('assets/style.css')) ?>">
+    <link rel="stylesheet" href="<?= htmlspecialchars(url('/assets/style.css')) ?>">
+    <style>
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .settings-card {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 700px) {
+            .settings-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .settings-card {
+                max-width: 100%;
+                padding: 16px;
+            }
+        }
+    </style>
 </head>
 <body>
 
 <div class="container-large">
-    <div class="header-flex" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <div class="header-flex settings-header">
         <h2>⚙️ Paramètres du compte</h2>
         <a href="<?= htmlspecialchars(route('clients.index')) ?>" class="btn-edit" style="text-decoration: none; background:#eee; color:#333;">← Retour</a>
     </div>
 
-    <div class="container" style="max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+    <div class="container settings-card">
         <h3>Changer le mot de passe</h3>
         
         <?php if ($message): ?>
