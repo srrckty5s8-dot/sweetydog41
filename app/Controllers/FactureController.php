@@ -147,13 +147,6 @@ class FactureController extends Controller
                 }
             }
 
-            if ($dureeMinutes > 0) {
-                $heures = intdiv($dureeMinutes, 60);
-                $minutes = $dureeMinutes % 60;
-                $dureeFormatee = $heures . 'h' . str_pad((string)$minutes, 2, '0', STR_PAD_LEFT);
-                $noteDuree = 'Durée toilettage: ' . $dureeFormatee;
-                $notes = $notes !== '' ? ($notes . ' | ' . $noteDuree) : $noteDuree;
-            }
 
             // Prix individuel de cet animal
             $prixAnimal = (float)str_replace(',', '.', (string)($aData['prix'] ?? '0'));
@@ -167,6 +160,7 @@ class FactureController extends Controller
                 'prix'          => $prixAnimal,
                 'mode_paiement' => $modePaiement ?: null,
                 'notes'         => $notes,
+                'duree_minutes' => $dureeMinutes > 0 ? $dureeMinutes : null,
             ]);
 
             $prestationIds[] = $lastId;

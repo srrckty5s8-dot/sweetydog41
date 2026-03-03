@@ -255,6 +255,7 @@ class Soin
         }
 
         $pdo = Database::getConnection();
+        Prestation::ensureDureeColumn($pdo);
 
         $useFactures = self::hasFacturesTable($pdo);
         if ($useFactures) {
@@ -265,6 +266,7 @@ class Soin
                     p.date_soin,
                     p.type_soin,
                     p.notes,
+                    p.duree_minutes,
                     p.prix,
                     p.mode_paiement,
                     f.numero_facture
@@ -281,6 +283,7 @@ class Soin
                     p.date_soin,
                     p.type_soin,
                     p.notes,
+                    p.duree_minutes,
                     p.prix,
                     p.mode_paiement,
                     NULL AS numero_facture
@@ -304,6 +307,7 @@ class Soin
         }
 
         $pdo = Database::getConnection();
+        Prestation::ensureDureeColumn($pdo);
 
         $useFactures = self::hasFacturesTable($pdo);
         if ($useFactures) {
@@ -314,6 +318,7 @@ class Soin
                     p.date_soin,
                     p.type_soin,
                     p.notes,
+                    p.duree_minutes,
                     p.prix,
                     p.mode_paiement,
                     a.nom_animal,
@@ -333,6 +338,7 @@ class Soin
                     p.date_soin,
                     p.type_soin,
                     p.notes,
+                    p.duree_minutes,
                     p.prix,
                     p.mode_paiement,
                     a.nom_animal,

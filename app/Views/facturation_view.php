@@ -664,24 +664,29 @@
                         </td>
                         <?php
                             $notesBrutes = trim((string)($soin['notes'] ?? ''));
-                            $dureeAffichee = '-';
                             $notesAffichees = $notesBrutes;
 
-                            // Nouveau format: "Durée toilettage: 1h30"
-                            if ($notesBrutes !== '' && preg_match('/(?:Durée toilettage|Temps toilettage)\s*:\s*(\d+)\s*h\s*(\d{1,2})?/i', $notesBrutes, $mDureeHm)) {
-                                $h = (int)$mDureeHm[1];
-                                $m = isset($mDureeHm[2]) ? (int)$mDureeHm[2] : 0;
-                                if ($m > 59) $m = 59;
+                            $dureeMinutes = (int)($soin['duree_minutes'] ?? 0);
+                            if ($dureeMinutes > 0) {
+                                $h = intdiv($dureeMinutes, 60);
+                                $m = $dureeMinutes % 60;
                                 $dureeAffichee = $h . 'h' . str_pad((string)$m, 2, '0', STR_PAD_LEFT);
-                                $notesAffichees = trim(preg_replace('/\s*\|?\s*(?:Durée toilettage|Temps toilettage)\s*:\s*\d+\s*h\s*\d{0,2}\s*/i', ' ', $notesBrutes));
-                            }
-                            // Ancien format: "Durée toilettage: 90 min" (compatibilité)
-                            elseif ($notesBrutes !== '' && preg_match('/(?:Durée toilettage|Temps toilettage)\s*:\s*(\d+)\s*min/i', $notesBrutes, $mDureeMin)) {
-                                $totalMin = (int)$mDureeMin[1];
-                                $h = intdiv($totalMin, 60);
-                                $m = $totalMin % 60;
-                                $dureeAffichee = $h . 'h' . str_pad((string)$m, 2, '0', STR_PAD_LEFT);
-                                $notesAffichees = trim(preg_replace('/\s*\|?\s*(?:Durée toilettage|Temps toilettage)\s*:\s*\d+\s*min\s*/i', ' ', $notesBrutes));
+                            } else {
+                                $dureeAffichee = '-';
+                                // Compatibilité lecture anciennes notes
+                                if ($notesBrutes !== '' && preg_match('/(?:Durée toilettage|Temps toilettage)\s*:\s*(\d+)\s*h\s*(\d{1,2})?/i', $notesBrutes, $mDureeHm)) {
+                                    $h = (int)$mDureeHm[1];
+                                    $m = isset($mDureeHm[2]) ? (int)$mDureeHm[2] : 0;
+                                    if ($m > 59) $m = 59;
+                                    $dureeAffichee = $h . 'h' . str_pad((string)$m, 2, '0', STR_PAD_LEFT);
+                                    $notesAffichees = trim(preg_replace('/\s*\|?\s*(?:Durée toilettage|Temps toilettage)\s*:\s*\d+\s*h\s*\d{0,2}\s*/i', ' ', $notesBrutes));
+                                } elseif ($notesBrutes !== '' && preg_match('/(?:Durée toilettage|Temps toilettage)\s*:\s*(\d+)\s*min/i', $notesBrutes, $mDureeMin)) {
+                                    $totalMin = (int)$mDureeMin[1];
+                                    $h = intdiv($totalMin, 60);
+                                    $m = $totalMin % 60;
+                                    $dureeAffichee = $h . 'h' . str_pad((string)$m, 2, '0', STR_PAD_LEFT);
+                                    $notesAffichees = trim(preg_replace('/\s*\|?\s*(?:Durée toilettage|Temps toilettage)\s*:\s*\d+\s*min\s*/i', ' ', $notesBrutes));
+                                }
                             }
 
                             if ($notesAffichees === '') {
