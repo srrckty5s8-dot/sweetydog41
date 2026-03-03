@@ -236,9 +236,9 @@
         .history-table thead { display: table-header-group; }
         .history-table tbody { display: table-row-group; }
         .history-table tr { display: table-row; }
-        .history-table th, .history-table td { display: table-cell; overflow-wrap: anywhere; }
+        .history-table th, .history-table td { display: table-cell; overflow-wrap: normal; word-break: normal; }
         .history-table tbody td { padding-top: 10px; padding-bottom: 10px; vertical-align: middle; }
-        .history-table th:nth-child(1), .history-table td:nth-child(1) { width: 9%; }
+        .history-table th:nth-child(1), .history-table td:nth-child(1) { width: 9%; white-space: nowrap; }
         .history-table th:nth-child(2), .history-table td:nth-child(2) { width: 9%; }
         .history-table th:nth-child(3), .history-table td:nth-child(3) { width: 19%; }
         .history-table th:nth-child(4), .history-table td:nth-child(4) { width: 8%; }
