@@ -735,30 +735,17 @@
                                 <i class="fa-regular fa-clock"></i> <?= htmlspecialchars($dureeAffichee) ?>
                             </span>
                         </td>
-                        <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em; width: 150px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em; width: 220px; max-width: 220px; white-space: normal;">
                             <?php
                                 $noteTexte = trim((string)$notesAffichees);
-                                $noteLen = function_exists('mb_strlen') ? mb_strlen($noteTexte, 'UTF-8') : strlen($noteTexte);
-                                $noteLimite = 80;
-                                if ($noteTexte !== '-' && $noteLen > $noteLimite) {
-                                    $notePreview = function_exists('mb_substr')
-                                        ? mb_substr($noteTexte, 0, $noteLimite, 'UTF-8')
-                                        : substr($noteTexte, 0, $noteLimite);
-                                    echo '<button type="button" class="note-preview-btn" data-full-note="' . htmlspecialchars($noteTexte, ENT_QUOTES, 'UTF-8') . '" style="background:none;border:none;padding:0;color:#64748b;cursor:pointer;text-align:left;font:inherit;display:inline-block;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;line-height:1.2;">' . htmlspecialchars($notePreview) . '...</button>';
-                                } else {
-                                    $noteSimple = htmlspecialchars($noteTexte !== '' ? $noteTexte : '-');
-                                    echo '<span style="display:inline-block;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;line-height:1.2;">' . $noteSimple . '</span>';
-                                }
+                                $noteSimple = htmlspecialchars($noteTexte !== '' ? $noteTexte : '-');
+                                echo '<div style="line-height:1.25; margin-bottom:6px;">' . $noteSimple . '</div>';
                                 $idPrestNote = (int)($soin['id_prestation'] ?? 0);
                             ?>
                             <?php if ($idPrestNote > 0): ?>
-                                <button type="button"
-                                        class="btn-edit-note"
-                                        data-prest-id="<?= $idPrestNote ?>"
-                                        data-current-note="<?= htmlspecialchars($noteTexte === '-' ? '' : $noteTexte, ENT_QUOTES, 'UTF-8') ?>"
-                                        style="margin-left:6px;background:none;border:none;cursor:pointer;color:#475569;">✏️</button>
-                                <form id="edit-note-form-<?= $idPrestNote ?>" method="post" action="<?= route('prestations.notes', ['id' => $idPrestNote]) ?>" style="display:none;">
-                                    <input type="hidden" name="notes" value="">
+                                <form method="post" action="<?= route('prestations.notes', ['id' => $idPrestNote]) ?>" style="display:flex; gap:6px; align-items:center;">
+                                    <input type="text" name="notes" value="<?= htmlspecialchars($noteTexte === '-' ? '' : $noteTexte, ENT_QUOTES, 'UTF-8') ?>" placeholder="Modifier observation" style="width:100%; min-width:120px; padding:4px 6px; border:1px solid #cbd5e1; border-radius:6px; font-size:12px;" />
+                                    <button type="submit" title="Enregistrer" style="border:none; background:#0ea5e9; color:#fff; border-radius:6px; padding:4px 8px; cursor:pointer;">💾</button>
                                 </form>
                             <?php endif; ?>
                         </td>
