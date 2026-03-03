@@ -618,7 +618,7 @@
                         }
                         ?>
                     </td>
-                    <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em;">
+                    <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em; white-space: nowrap;">
                         <?php
                             $noteTexte = trim((string)($soin['notes'] ?? '-'));
                             $noteLen = function_exists('mb_strlen') ? mb_strlen($noteTexte, 'UTF-8') : strlen($noteTexte);
@@ -627,7 +627,7 @@
                                 $notePreview = function_exists('mb_substr')
                                     ? mb_substr($noteTexte, 0, $noteLimite, 'UTF-8')
                                     : substr($noteTexte, 0, $noteLimite);
-                                echo '<button type="button" class="note-preview-btn" data-full-note="' . htmlspecialchars($noteTexte, ENT_QUOTES, 'UTF-8') . '" style="background:none;border:none;padding:0;color:#64748b;cursor:pointer;text-align:left;font:inherit;">' . htmlspecialchars($notePreview) . '...</button>';
+                                echo '<button type="button" class="note-preview-btn" data-full-note="' . htmlspecialchars($noteTexte, ENT_QUOTES, 'UTF-8') . '" style="background:none;border:none;padding:0;color:#64748b;cursor:pointer;text-align:left;font:inherit;display:inline-block;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;">' . htmlspecialchars($notePreview) . '...</button>';
                             } else {
                                 echo htmlspecialchars($noteTexte !== '' ? $noteTexte : '-');
                             }
