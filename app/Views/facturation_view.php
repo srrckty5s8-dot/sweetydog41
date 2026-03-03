@@ -735,18 +735,25 @@
                                 <i class="fa-regular fa-clock"></i> <?= htmlspecialchars($dureeAffichee) ?>
                             </span>
                         </td>
-                        <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em; width: 220px; max-width: 220px; white-space: normal;">
+                        <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em; width: 180px; max-width: 180px; white-space: nowrap; overflow:hidden; text-overflow:ellipsis;">
                             <?php
                                 $noteTexte = trim((string)$notesAffichees);
-                                $noteSimple = htmlspecialchars($noteTexte !== '' ? $noteTexte : '-');
-                                echo '<div style="line-height:1.25; margin-bottom:6px;">' . $noteSimple . '</div>';
+                                $noteSimple = $noteTexte !== '' ? $noteTexte : '-';
                                 $idPrestNote = (int)($soin['id_prestation'] ?? 0);
                             ?>
                             <?php if ($idPrestNote > 0): ?>
-                                <form method="post" action="<?= route('prestations.notes', ['id' => $idPrestNote]) ?>" style="display:flex; gap:6px; align-items:center;">
-                                    <input type="text" name="notes" value="<?= htmlspecialchars($noteTexte === '-' ? '' : $noteTexte, ENT_QUOTES, 'UTF-8') ?>" placeholder="Modifier observation" style="width:100%; min-width:120px; padding:4px 6px; border:1px solid #cbd5e1; border-radius:6px; font-size:12px;" />
-                                    <button type="submit" title="Enregistrer" style="border:none; background:#0ea5e9; color:#fff; border-radius:6px; padding:4px 8px; cursor:pointer;">💾</button>
+                                <button type="button"
+                                        class="note-preview-btn"
+                                        data-prest-id="<?= $idPrestNote ?>"
+                                        data-full-note="<?= htmlspecialchars($noteSimple, ENT_QUOTES, 'UTF-8') ?>"
+                                        style="background:none;border:none;padding:0;color:#64748b;cursor:pointer;text-align:left;font:inherit;display:inline-block;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;line-height:1.2;">
+                                    <?= htmlspecialchars($noteSimple) ?>
+                                </button>
+                                <form id="edit-note-form-<?= $idPrestNote ?>" method="post" action="<?= route('prestations.notes', ['id' => $idPrestNote]) ?>" style="display:none;">
+                                    <input type="hidden" name="notes" value="">
                                 </form>
+                            <?php else: ?>
+                                <span><?= htmlspecialchars($noteSimple) ?></span>
                             <?php endif; ?>
                         </td>
                         <td data-label="Prix" style="white-space: nowrap;">
@@ -1367,6 +1374,9 @@
             <button type="button" id="notes-modal-close" style="background:none; border:none; font-size:1.5rem; line-height:1; cursor:pointer; color:#64748b;">&times;</button>
         </div>
         <div id="notes-modal-content" style="white-space:pre-wrap; color:#334155; line-height:1.5;"></div>
+        <div style="margin-top:14px; text-align:right;">
+            <button type="button" id="notes-modal-edit" style="border:none; background:#0ea5e9; color:#fff; border-radius:8px; padding:8px 12px; cursor:pointer;">Modifier</button>
+        </div>
     </div>
 </div>
 
@@ -1375,18 +1385,25 @@
     var modal = document.getElementById('notes-modal');
     var closeBtn = document.getElementById('notes-modal-close');
     var content = document.getElementById('notes-modal-content');
-    if (!modal || !closeBtn || !content) return;
+    var editBtn = document.getElementById('notes-modal-edit');
+    if (!modal || !closeBtn || !content || !editBtn) return;
+
+    var currentPrestId = null;
+    var currentNote = '';
 
     function closeModal() { modal.style.display = 'none'; }
-    function openModal(text) {
-        content.textContent = text || '-';
+    function openModal(text, prestId) {
+        currentPrestId = prestId || null;
+        currentNote = text || '';
+        content.textContent = currentNote || '-';
+        editBtn.style.display = currentPrestId ? 'inline-block' : 'none';
         modal.style.display = 'flex';
     }
 
     document.addEventListener('click', function(e) {
         var trigger = e.target.closest('.note-preview-btn');
         if (trigger) {
-            openModal(trigger.getAttribute('data-full-note') || '');
+            openModal(trigger.getAttribute('data-full-note') || '', trigger.getAttribute('data-prest-id'));
             return;
         }
         if (e.target === modal) {
@@ -1394,30 +1411,21 @@
         }
     });
 
-    closeBtn.addEventListener('click', closeModal);
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
-    });
-})();
-</script>
-
-<script>
-(function() {
-    document.addEventListener('click', function(e) {
-        var btn = e.target.closest('.btn-edit-note');
-        if (!btn) return;
-
-        var id = btn.getAttribute('data-prest-id');
-        var current = btn.getAttribute('data-current-note') || '';
-        var next = window.prompt('Modifier l\'observation :', current);
+    editBtn.addEventListener('click', function() {
+        if (!currentPrestId) return;
+        var next = window.prompt('Modifier l\'observation :', currentNote || '');
         if (next === null) return;
-
-        var form = document.getElementById('edit-note-form-' + id);
+        var form = document.getElementById('edit-note-form-' + currentPrestId);
         if (!form) return;
         var input = form.querySelector('input[name="notes"]');
         if (!input) return;
         input.value = next;
         form.submit();
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
     });
 })();
 </script>
