@@ -301,10 +301,10 @@
             }
 
             /* Tableau historique en cartes */
-            table { border-spacing: 0; }
-            table thead { display: none; }
-            table, table tbody, table tr, table td { display: block; width: 100%; }
-            table tr {
+            .history-table { border-spacing: 0; }
+            .history-table thead { display: none; }
+            .history-table, .history-table tbody, .history-table tr, .history-table td { display: block !important; width: 100%; }
+            .history-table tr {
                 margin-bottom: 12px;
                 border: 1px solid #ebf2ed;
                 border-radius: 14px;
@@ -312,12 +312,12 @@
                 background: white;
                 box-shadow: 0 8px 16px rgba(15,23,42,0.06);
             }
-            table td {
+            .history-table td {
                 padding: 8px 15px !important;
                 border-bottom: 1px solid #f8f9fa !important;
                 text-align: left !important;
             }
-            table td:before {
+            .history-table td:before {
                 content: attr(data-label);
                 font-weight: 700;
                 font-size: 0.7rem;
@@ -326,7 +326,7 @@
                 display: block;
                 margin-bottom: 3px;
             }
-            table td:last-child { border-bottom: none !important; }
+            .history-table td:last-child { border-bottom: none !important; }
 
             .tag-soin, .tag-vente { font-size: 0.72em; padding: 3px 8px; margin-bottom: 3px; display: inline-block; }
             .upcoming-rdv-card {
