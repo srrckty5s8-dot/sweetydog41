@@ -33,13 +33,16 @@
             background: #2563eb; border-color: #2563eb; color: white;
         }
         .tag-soin {
-            background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 6px;
-            font-size: 0.8em; font-weight: 600; border: 1px solid #c8e6c9; margin-right: 5px;
+            background: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 6px;
+            font-size: 0.76em; font-weight: 600; border: 1px solid #c8e6c9; margin-right: 4px;
+            display:inline-flex; align-items:center; white-space:nowrap;
         }
         .tag-vente {
-            background: #ede9fe; color: #6d28d9; padding: 4px 10px; border-radius: 6px;
-            font-size: 0.8em; font-weight: 600; border: 1px solid #ddd6fe; margin-right: 5px;
+            background: #ede9fe; color: #6d28d9; padding: 4px 8px; border-radius: 6px;
+            font-size: 0.76em; font-weight: 600; border: 1px solid #ddd6fe; margin-right: 4px;
+            display:inline-flex; align-items:center; white-space:nowrap;
         }
+        .prestations-compact { max-width: 200px; display:flex; flex-wrap:wrap; gap:4px; max-height: 2.7em; overflow:hidden; align-items:flex-start; }
         .info-bandeau {
             background: #fff; padding: 15px; border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px;
@@ -81,6 +84,34 @@
             border: 1px solid #ffeaa7;
         }
         .btn-generate-invoice:hover { background: #ffeaa7; }
+        .history-table-wrap { width: 100%; overflow-x: hidden; }
+        .history-table { width: 100% !important; display: table; table-layout: fixed; }
+        .history-table thead { display: table-header-group; }
+        .history-table tbody { display: table-row-group; }
+        .history-table tr { display: table-row; }
+        .history-table th, .history-table td { display: table-cell; overflow-wrap: normal; word-break: normal; }
+        .history-table tbody td { padding-top: 10px; padding-bottom: 10px; vertical-align: middle; }
+        .history-table th:nth-child(1), .history-table td:nth-child(1) { width: 9%; white-space: nowrap; }
+        .history-table th:nth-child(2), .history-table td:nth-child(2) { width: 19%; }
+        .history-table th:nth-child(3), .history-table td:nth-child(3) { width: 8%; }
+        .history-table th:nth-child(4), .history-table td:nth-child(4) { width: 16%; }
+        .history-table th:nth-child(5), .history-table td:nth-child(5) { width: 10%; }
+        .history-table th:nth-child(6), .history-table td:nth-child(6) { width: 12%; }
+        .history-table th:nth-child(7), .history-table td:nth-child(7) { width: 26%; }
+        .history-table td[data-label="Prestations"] .prestations-compact { max-width: none; max-height: none; overflow: visible; }
+        .history-table td[data-label="Actions"] { white-space: nowrap !important; overflow: visible; padding-right: 14px !important; }
+        .history-table td[data-label="Actions"] .btn-download-pdf,
+        .history-table td[data-label="Actions"] .btn-email-invoice,
+        .history-table td[data-label="Actions"] .btn-generate-invoice {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1px 3px 1px 0;
+            font-size: 0.7em;
+            padding: 3px 6px;
+            line-height: 1.1;
+        }
+        .history-table td[data-label="Actions"] .btn-email-invoice { margin-left: 0; }
         .upcoming-rdv-card {
             background: #ffffff;
             border: 1px solid #e8efe9;
@@ -586,7 +617,8 @@
             return false;
         };
     ?>
-    <table style="background: white; border-radius: 12px; overflow: hidden; border-collapse: separate; border-spacing: 0; width: 100%;">
+    <div class="history-table-wrap">
+    <table class="history-table" style="background: white; border-radius: 12px; overflow: hidden; border-collapse: separate; border-spacing: 0; width: 100%;">
         <thead style="background: #f8f9fa;">
             <tr>
                 <th style="padding: 15px; text-align: left;">Date</th>
@@ -606,6 +638,7 @@
                 <tr style="border-bottom: 1px solid #eee;">
                     <td data-label="Date" style="padding: 15px;"><strong><?= date('d/m/Y', strtotime($soin['date_soin'])); ?></strong></td>
                     <td data-label="Prestations">
+                        <div class="prestations-compact">
                         <?php
                         $tags = explode(", ", $soin['type_soin'] ?? '');
                         foreach($tags as $tag){
@@ -618,6 +651,7 @@
                             }
                         }
                         ?>
+                        </div>
                     </td>
                     <?php
                         $notesBrutes = trim((string)($soin['notes'] ?? ''));
@@ -660,9 +694,10 @@
                                 $notePreview = function_exists('mb_substr')
                                     ? mb_substr($noteTexte, 0, $noteLimite, 'UTF-8')
                                     : substr($noteTexte, 0, $noteLimite);
-                                echo '<button type="button" class="note-preview-btn" data-full-note="' . htmlspecialchars($noteTexte, ENT_QUOTES, 'UTF-8') . '" style="background:none;border:none;padding:0;color:#64748b;cursor:pointer;text-align:left;font:inherit;display:inline-block;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;">' . htmlspecialchars($notePreview) . '...</button>';
+                                echo '<button type="button" class="note-preview-btn" data-full-note="' . htmlspecialchars($noteTexte, ENT_QUOTES, 'UTF-8') . '" style="background:none;border:none;padding:0;color:#64748b;cursor:pointer;text-align:left;font:inherit;display:inline-block;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;line-height:1.2;">' . htmlspecialchars($notePreview) . '...</button>';
                             } else {
-                                echo htmlspecialchars($noteTexte !== '' ? $noteTexte : '-');
+                                $noteSimple = htmlspecialchars($noteTexte !== '' ? $noteTexte : '-');
+                                echo '<span style="display:inline-block;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;line-height:1.2;">' . $noteSimple . '</span>';
                             }
                         ?>
                     </td>
@@ -675,9 +710,7 @@
                         ?>
                         <span style="font-weight: bold; color: #2e7d32; white-space: nowrap;"><?= number_format($prixAffiche, 2, ',', ' '); ?>&nbsp;€</span>
                         <?php if (abs($remiseMontant) > 0.0001): ?>
-                            <div style="font-size: 0.78em; color: #64748b; margin-top: 2px;">
-                                remise: <?= number_format($remiseMontant, 2, ',', ' '); ?>&nbsp;€
-                            </div>
+                            <span title="Remise: <?= htmlspecialchars(number_format($remiseMontant, 2, ',', ' ')) ?> €" style="margin-left:6px; color:#64748b; cursor:help;">ⓘ</span>
                         <?php endif; ?>
                     </td>
                     <td data-label="Paiement" style="text-align: center;">
@@ -741,7 +774,7 @@
     <a href="<?= htmlspecialchars($emailUrl) ?>"
        class="btn-email-invoice"
        title="Envoyer la facture par mail">
-      ✉️ Envoyer par mail
+      ✉️ Email
     </a>
   <?php elseif ($idPrest > 0) : ?>
     <a href="<?= htmlspecialchars($generateUrl) ?>"
@@ -752,14 +785,14 @@
     <a href="<?= htmlspecialchars($emailUrl) ?>"
        class="btn-email-invoice"
        title="Envoyer la facture par mail">
-      ✉️ Envoyer par mail
+      ✉️ Email
     </a>
   <?php else : ?>
     <span style="color:#94a3b8; font-size:0.85em;">—</span>
   <?php endif; ?>
 
   <span title="Prestation verrouillée"
-        style="margin-left: 10px; cursor: help; filter: grayscale(100%); opacity: 0.5;">🔒</span>
+        style="margin-left: 4px; display:inline-flex; align-items:center; cursor: help; filter: grayscale(100%); opacity: 0.6;">🔒</span>
 </td>
 
 
@@ -768,6 +801,7 @@
         <?php endif; ?>
         </tbody>
     </table>
+    </div>
 </div>
 
 <!-- ===== MODAL VENTE ===== -->
