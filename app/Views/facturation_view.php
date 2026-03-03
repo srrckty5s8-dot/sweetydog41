@@ -996,9 +996,11 @@
             var notes = block.querySelector('textarea') ? block.querySelector('textarea').value : '';
             var prixInput = block.querySelector('.prix-animal-input');
             var prix = prixInput ? prixInput.value : '';
-            var dureeInput = block.querySelector('.duree-animal-input');
-            var duree = dureeInput ? dureeInput.value : '';
-            existingData[id] = { soins: soins, notes: notes, prix: prix, duree: duree };
+            var dureeHInput = block.querySelector('.duree-heures-input');
+            var dureeMInput = block.querySelector('.duree-minutes-input');
+            var dureeHeures = dureeHInput ? dureeHInput.value : '';
+            var dureeMinutes = dureeMInput ? dureeMInput.value : '';
+            existingData[id] = { soins: soins, notes: notes, prix: prix, dureeHeures: dureeHeures, dureeMinutes: dureeMinutes };
         });
 
         soinsContainer.innerHTML = '';
@@ -1013,7 +1015,7 @@
 
         ids.forEach(function(id) {
             var animal = selectedAnimals[id];
-            var prev = existingData[id] || { soins: [], notes: '', duree: '' };
+            var prev = existingData[id] || { soins: [], notes: '', dureeHeures: '', dureeMinutes: '' };
 
             var block = document.createElement('div');
             block.className = 'animal-soin-block';
@@ -1047,13 +1049,22 @@
             html += '<textarea name="animaux[' + id + '][notes]" rows="2" style="width:100%; border:1px solid #ddd; border-radius:8px; padding:10px; box-sizing:border-box; margin-top:5px;" placeholder="État du poil, comportement...">' + escapeHtml(prev.notes) + '</textarea>';
             html += '</div>';
 
-            // Durée du toilettage
+            // Durée du toilettage (heures + minutes)
             html += '<div style="margin-bottom: 15px;">';
-            html += '<label style="font-weight:600; color:#475569;"><i class="fa-regular fa-clock"></i> Temps de toilettage (format: 1h30)</label>';
-            html += '<input type="text" name="animaux[' + id + '][duree_minutes]" class="duree-animal-input" placeholder="ex: 1h30" pattern="^\\d+\\s*h\\s*\\d{0,2}$"';
-            html += ' value="' + (prev.duree || '') + '"';
-            html += ' style="width:100%; padding:10px; border:2px solid #e2e8f0; border-radius:10px; background:#f8fafc; font-size:1rem; box-sizing:border-box; margin-top:5px;">';
-            html += '<small style="display:block; margin-top:6px; color:#64748b;">Exemple: 1h30, 2h00, 0h45</small>';
+            html += '<label style="font-weight:600; color:#475569;"><i class="fa-regular fa-clock"></i> Temps de toilettage</label>';
+            html += '<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:5px;">';
+            html += '<div>';
+            html += '<input type="number" min="0" step="1" name="animaux[' + id + '][duree_heures]" class="duree-heures-input" placeholder="Heures (ex: 1)"';
+            html += ' value="' + (prev.dureeHeures || '') + '"';
+            html += ' style="width:100%; padding:10px; border:2px solid #e2e8f0; border-radius:10px; background:#f8fafc; font-size:1rem; box-sizing:border-box;">';
+            html += '</div>';
+            html += '<div>';
+            html += '<input type="number" min="0" max="59" step="1" name="animaux[' + id + '][duree_minutes_part]" class="duree-minutes-input" placeholder="Minutes (ex: 30)"';
+            html += ' value="' + (prev.dureeMinutes || '') + '"';
+            html += ' style="width:100%; padding:10px; border:2px solid #e2e8f0; border-radius:10px; background:#f8fafc; font-size:1rem; box-sizing:border-box;">';
+            html += '</div>';
+            html += '</div>';
+            html += '<small style="display:block; margin-top:6px; color:#64748b;">Exemple: 1h30 → Heures: 1 / Minutes: 30</small>';
             html += '</div>';
 
             // Prix par animal
@@ -1071,6 +1082,20 @@
         // Ajouter les listeners pour recalculer le total
         soinsContainer.querySelectorAll('.prix-animal-input').forEach(function(inp) {
             inp.addEventListener('input', recalcTotal);
+        });
+
+        // Auto-focus: après saisie des heures, aller sur minutes
+        soinsContainer.querySelectorAll('.duree-heures-input').forEach(function(inp) {
+            inp.addEventListener('input', function() {
+                var val = String(inp.value || '').trim();
+                var block = inp.closest('.animal-soin-block');
+                var minInput = block ? block.querySelector('.duree-minutes-input') : null;
+                if (!minInput) return;
+                if (val !== '' && /^\d+$/.test(val)) {
+                    minInput.focus();
+                    minInput.select();
+                }
+            });
         });
 
         recalcTotal();

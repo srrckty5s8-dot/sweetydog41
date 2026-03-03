@@ -122,19 +122,31 @@ class FactureController extends Controller
             // Soins de cet animal (sans les ventes)
             $types = !empty($aData['type_soin']) ? implode(", ", (array)$aData['type_soin']) : "Soin divers";
             $notes = trim((string)($aData['notes'] ?? ''));
-            $dureeRaw = trim((string)($aData['duree_minutes'] ?? ''));
-            $dureeMinutes = 0;
-            if ($dureeRaw !== '') {
-                if (preg_match('/^(\d+)\s*h\s*(\d{1,2})?$/i', $dureeRaw, $mDureeHeure)) {
-                    $heures = (int)$mDureeHeure[1];
-                    $minutes = isset($mDureeHeure[2]) ? (int)$mDureeHeure[2] : 0;
-                    if ($minutes > 59) $minutes = 59;
-                    $dureeMinutes = ($heures * 60) + $minutes;
-                } elseif (preg_match('/^(\d+)$/', $dureeRaw, $mDureeMin)) {
-                    // Compatibilité: ancienne saisie en minutes
-                    $dureeMinutes = (int)$mDureeMin[1];
+
+            // Nouveau format recommandé : 2 champs séparés (heures + minutes)
+            $dureeHeures = isset($aData['duree_heures']) ? (int)$aData['duree_heures'] : 0;
+            $dureeMinutesPart = isset($aData['duree_minutes_part']) ? (int)$aData['duree_minutes_part'] : 0;
+            if ($dureeHeures < 0) $dureeHeures = 0;
+            if ($dureeMinutesPart < 0) $dureeMinutesPart = 0;
+            if ($dureeMinutesPart > 59) $dureeMinutesPart = 59;
+
+            $dureeMinutes = ($dureeHeures * 60) + $dureeMinutesPart;
+
+            // Compatibilité: ancien champ texte (1h30 / minutes)
+            if ($dureeMinutes <= 0) {
+                $dureeRaw = trim((string)($aData['duree_minutes'] ?? ''));
+                if ($dureeRaw !== '') {
+                    if (preg_match('/^(\d+)\s*h\s*(\d{1,2})?$/i', $dureeRaw, $mDureeHeure)) {
+                        $heures = (int)$mDureeHeure[1];
+                        $minutes = isset($mDureeHeure[2]) ? (int)$mDureeHeure[2] : 0;
+                        if ($minutes > 59) $minutes = 59;
+                        $dureeMinutes = ($heures * 60) + $minutes;
+                    } elseif (preg_match('/^(\d+)$/', $dureeRaw, $mDureeMin)) {
+                        $dureeMinutes = (int)$mDureeMin[1];
+                    }
                 }
             }
+
             if ($dureeMinutes > 0) {
                 $heures = intdiv($dureeMinutes, 60);
                 $minutes = $dureeMinutes % 60;
