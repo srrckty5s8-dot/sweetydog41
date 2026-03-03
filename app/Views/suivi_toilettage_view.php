@@ -591,6 +591,7 @@
             <tr>
                 <th style="padding: 15px; text-align: left;">Date</th>
                 <th style="text-align: left;">Prestations</th>
+                <th style="text-align: center;">Temps</th>
                 <th style="text-align: left;">Observations</th>
                 <th style="text-align: left;">Prix</th>
                 <th style="text-align: center;">Paiement</th>
@@ -599,7 +600,7 @@
         </thead>
         <tbody>
         <?php if(empty($historique)): ?>
-            <tr><td colspan="6" style="padding: 20px; text-align: center;">Aucun soin enregistré.</td></tr>
+            <tr><td colspan="7" style="padding: 20px; text-align: center;">Aucun soin enregistré.</td></tr>
         <?php else: ?>
             <?php foreach ($historique as $soin): ?>
                 <tr style="border-bottom: 1px solid #eee;">
@@ -618,9 +619,34 @@
                         }
                         ?>
                     </td>
+                    <?php
+                        $notesBrutes = trim((string)($soin['notes'] ?? ''));
+                        $dureeAffichee = '-';
+                        $notesAffichees = $notesBrutes;
+
+                        if ($notesBrutes !== '' && preg_match('/(?:Durée toilettage|Temps toilettage)\s*:\s*(\d+)\s*h\s*(\d{1,2})?/i', $notesBrutes, $mDureeHm)) {
+                            $h = (int)$mDureeHm[1];
+                            $m = isset($mDureeHm[2]) ? (int)$mDureeHm[2] : 0;
+                            if ($m > 59) $m = 59;
+                            $dureeAffichee = $h . 'h' . str_pad((string)$m, 2, '0', STR_PAD_LEFT);
+                            $notesAffichees = trim(preg_replace('/\s*\|?\s*(?:Durée toilettage|Temps toilettage)\s*:\s*\d+\s*h\s*\d{0,2}\s*/i', ' ', $notesBrutes));
+                        } elseif ($notesBrutes !== '' && preg_match('/(?:Durée toilettage|Temps toilettage)\s*:\s*(\d+)\s*min/i', $notesBrutes, $mDureeMin)) {
+                            $totalMin = (int)$mDureeMin[1];
+                            $h = intdiv($totalMin, 60);
+                            $m = $totalMin % 60;
+                            $dureeAffichee = $h . 'h' . str_pad((string)$m, 2, '0', STR_PAD_LEFT);
+                            $notesAffichees = trim(preg_replace('/\s*\|?\s*(?:Durée toilettage|Temps toilettage)\s*:\s*\d+\s*min\s*/i', ' ', $notesBrutes));
+                        }
+                        if ($notesAffichees === '') {
+                            $notesAffichees = '-';
+                        }
+                    ?>
+                    <td data-label="Temps" style="text-align: center; white-space: nowrap;">
+                        <span style="display:inline-flex; align-items:center; gap:4px; font-weight:700; color:#475569;">🕒 <?= htmlspecialchars($dureeAffichee) ?></span>
+                    </td>
                     <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em; white-space: nowrap;">
                         <?php
-                            $noteTexte = trim((string)($soin['notes'] ?? '-'));
+                            $noteTexte = trim((string)$notesAffichees);
                             $noteLen = function_exists('mb_strlen') ? mb_strlen($noteTexte, 'UTF-8') : strlen($noteTexte);
                             $noteLimite = 80;
                             if ($noteTexte !== '-' && $noteLen > $noteLimite) {
