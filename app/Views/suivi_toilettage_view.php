@@ -953,6 +953,13 @@
             <button type="button" id="notes-modal-close" style="background:none; border:none; font-size:1.5rem; line-height:1; cursor:pointer; color:#64748b;">&times;</button>
         </div>
         <div id="notes-modal-content" style="white-space:pre-wrap; color:#334155; line-height:1.5;"></div>
+        <form id="notes-modal-edit-form" method="post" style="display:none; margin-top:12px; gap:8px;">
+            <textarea id="notes-modal-input" name="notes" style="width:100%; min-height:90px; border:1px solid #cbd5e1; border-radius:8px; padding:8px;"></textarea>
+            <div style="display:flex; gap:8px; justify-content:flex-end;">
+                <button type="button" id="notes-modal-cancel" style="border:none; background:#e2e8f0; color:#334155; border-radius:8px; padding:8px 12px; cursor:pointer;">Annuler</button>
+                <button type="submit" style="border:none; background:#0ea5e9; color:#fff; border-radius:8px; padding:8px 12px; cursor:pointer;">Enregistrer</button>
+            </div>
+        </form>
         <div style="margin-top:14px; text-align:right;">
             <button type="button" id="notes-modal-edit" style="border:none; background:#0ea5e9; color:#fff; border-radius:8px; padding:8px 12px; cursor:pointer;">Modifier</button>
         </div>
@@ -965,18 +972,28 @@
     var closeBtn = document.getElementById('notes-modal-close');
     var content = document.getElementById('notes-modal-content');
     var editBtn = document.getElementById('notes-modal-edit');
-    if (!modal || !closeBtn || !content || !editBtn) return;
+    var editForm = document.getElementById('notes-modal-edit-form');
+    var editInput = document.getElementById('notes-modal-input');
+    var cancelBtn = document.getElementById('notes-modal-cancel');
+    if (!modal || !closeBtn || !content || !editBtn || !editForm || !editInput || !cancelBtn) return;
 
     var currentPrestId = null;
     var currentNote = '';
 
-    function closeModal() { modal.style.display = 'none'; }
+    function setReadMode() {
+        content.style.display = 'block';
+        editForm.style.display = 'none';
+        editBtn.style.display = currentPrestId ? 'inline-block' : 'none';
+    }
+
+    function closeModal() { modal.style.display = 'none'; setReadMode(); }
     function openModal(text, prestId) {
         currentPrestId = prestId || null;
         currentNote = text || '';
         content.textContent = currentNote || '-';
-        editBtn.style.display = currentPrestId ? 'inline-block' : 'none';
+        editInput.value = currentNote || '';
         modal.style.display = 'flex';
+        setReadMode();
     }
 
     document.addEventListener('click', function(e) {
@@ -990,13 +1007,24 @@
 
     editBtn.addEventListener('click', function() {
         if (!currentPrestId) return;
-        var next = window.prompt('Modifier l\'observation :', currentNote || '');
-        if (next === null) return;
+        content.style.display = 'none';
+        editBtn.style.display = 'none';
+        editForm.style.display = 'grid';
+        editInput.focus();
+    });
+
+    cancelBtn.addEventListener('click', function() {
+        editInput.value = currentNote || '';
+        setReadMode();
+    });
+
+    editForm.addEventListener('submit', function(e) {
+        e.preventDefault();
         var form = document.getElementById('edit-note-form-' + currentPrestId);
         if (!form) return;
         var input = form.querySelector('input[name="notes"]');
         if (!input) return;
-        input.value = next;
+        input.value = editInput.value;
         form.submit();
     });
 
