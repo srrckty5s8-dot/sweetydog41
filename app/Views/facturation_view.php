@@ -692,7 +692,21 @@
                                 <i class="fa-regular fa-clock"></i> <?= htmlspecialchars($dureeAffichee) ?>
                             </span>
                         </td>
-                        <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em;"><?= htmlspecialchars($notesAffichees); ?></td>
+                        <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em;">
+                            <?php
+                                $noteTexte = trim((string)$notesAffichees);
+                                $noteLen = function_exists('mb_strlen') ? mb_strlen($noteTexte, 'UTF-8') : strlen($noteTexte);
+                                $noteLimite = 80;
+                                if ($noteTexte !== '-' && $noteLen > $noteLimite) {
+                                    $notePreview = function_exists('mb_substr')
+                                        ? mb_substr($noteTexte, 0, $noteLimite, 'UTF-8')
+                                        : substr($noteTexte, 0, $noteLimite);
+                                    echo '<button type="button" class="note-preview-btn" data-full-note="' . htmlspecialchars($noteTexte, ENT_QUOTES, 'UTF-8') . '" style="background:none;border:none;padding:0;color:#64748b;cursor:pointer;text-align:left;font:inherit;">' . htmlspecialchars($notePreview) . '...</button>';
+                                } else {
+                                    echo htmlspecialchars($noteTexte !== '' ? $noteTexte : '-');
+                                }
+                            ?>
+                        </td>
                         <td data-label="Prix" style="white-space: nowrap;">
                             <?php
                                 $prixAffiche = isset($soin['prix_apres_remise'])
@@ -1302,6 +1316,47 @@
         div.textContent = str;
         return div.innerHTML;
     }
+})();
+</script>
+
+<div id="notes-modal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,.55); z-index:10050; align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#fff; width:min(680px, 100%); max-height:80vh; overflow:auto; border-radius:14px; box-shadow:0 24px 64px rgba(0,0,0,.25); padding:18px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:10px;">
+            <h4 style="margin:0; color:#1e293b;"><i class="fa-regular fa-note-sticky"></i> Observation complète</h4>
+            <button type="button" id="notes-modal-close" style="background:none; border:none; font-size:1.5rem; line-height:1; cursor:pointer; color:#64748b;">&times;</button>
+        </div>
+        <div id="notes-modal-content" style="white-space:pre-wrap; color:#334155; line-height:1.5;"></div>
+    </div>
+</div>
+
+<script>
+(function() {
+    var modal = document.getElementById('notes-modal');
+    var closeBtn = document.getElementById('notes-modal-close');
+    var content = document.getElementById('notes-modal-content');
+    if (!modal || !closeBtn || !content) return;
+
+    function closeModal() { modal.style.display = 'none'; }
+    function openModal(text) {
+        content.textContent = text || '-';
+        modal.style.display = 'flex';
+    }
+
+    document.addEventListener('click', function(e) {
+        var trigger = e.target.closest('.note-preview-btn');
+        if (trigger) {
+            openModal(trigger.getAttribute('data-full-note') || '');
+            return;
+        }
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
+    });
 })();
 </script>
 
