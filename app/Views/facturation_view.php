@@ -617,8 +617,8 @@
 
         <!-- HISTORIQUE DES FACTURES DU CLIENT -->
         <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-clock-rotate-left"></i> Historique des factures de <?= htmlspecialchars($proprio['prenom'] . ' ' . $proprio['nom']) ?></h3>
-        <div style="width:100%; overflow-x:auto;">
-        <table style="background: white; border-radius: 12px; overflow: hidden; border-collapse: separate; border-spacing: 0; width: 100%; min-width: 1050px;">
+        <div style="width:100%; overflow-x:visible;">
+        <table style="background: white; border-radius: 12px; overflow: hidden; border-collapse: separate; border-spacing: 0; width: 100%; table-layout: auto;">
             <thead style="background: #f8f9fa;">
                 <tr>
                     <th style="padding: 15px; text-align: left;">Date</th>
@@ -698,7 +698,7 @@
                                 <i class="fa-regular fa-clock"></i> <?= htmlspecialchars($dureeAffichee) ?>
                             </span>
                         </td>
-                        <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em; white-space: nowrap;">
+                        <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em;">
                             <?php
                                 $noteTexte = trim((string)$notesAffichees);
                                 $noteLen = function_exists('mb_strlen') ? mb_strlen($noteTexte, 'UTF-8') : strlen($noteTexte);
@@ -741,7 +741,7 @@
                                 }
                             ?>
                         </td>
-                        <td data-label="Actions" style="text-align: center; white-space: nowrap;">
+                        <td data-label="Actions" style="text-align: center;">
                             <?php
                                 $idPrest = (int)($soin['id_prestation'] ?? 0);
                                 $groupIds = trim((string)($soin['facture_group_ids'] ?? ''));
