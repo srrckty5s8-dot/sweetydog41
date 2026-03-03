@@ -43,4 +43,22 @@ class PrestationController extends Controller
         // Redirection vers la génération de facture (route MVC)
         redirect('invoices.generate', ['id' => $lastId, 'animal' => $id_animal]);
     }
+
+    public function updateNotes($id = 0)
+    {
+        $this->requireLogin();
+
+        $idPrestation = (int)$id;
+        if ($idPrestation <= 0) {
+            redirect('home');
+            exit;
+        }
+
+        $notes = (string)($_POST['notes'] ?? '');
+        Prestation::updateNotes($idPrestation, $notes);
+
+        $back = $_SERVER['HTTP_REFERER'] ?? route('home');
+        header('Location: ' . $back);
+        exit;
+    }
 }

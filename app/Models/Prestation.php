@@ -105,4 +105,20 @@ class Prestation
         ]);
         return (int)$pdo->lastInsertId();
     }
+
+    public static function updateNotes(int $idPrestation, string $notes): bool
+    {
+        if ($idPrestation <= 0) {
+            return false;
+        }
+
+        $pdo = Database::getConnection();
+        self::ensureDureeColumn($pdo);
+
+        $stmt = $pdo->prepare('UPDATE Prestations SET notes = :notes WHERE id_prestation = :id');
+        return $stmt->execute([
+            'id' => $idPrestation,
+            'notes' => trim($notes),
+        ]);
+    }
 }

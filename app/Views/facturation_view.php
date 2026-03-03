@@ -749,7 +749,18 @@
                                     $noteSimple = htmlspecialchars($noteTexte !== '' ? $noteTexte : '-');
                                     echo '<span style="display:inline-block;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;line-height:1.2;">' . $noteSimple . '</span>';
                                 }
+                                $idPrestNote = (int)($soin['id_prestation'] ?? 0);
                             ?>
+                            <?php if ($idPrestNote > 0): ?>
+                                <button type="button"
+                                        class="btn-edit-note"
+                                        data-prest-id="<?= $idPrestNote ?>"
+                                        data-current-note="<?= htmlspecialchars($noteTexte === '-' ? '' : $noteTexte, ENT_QUOTES, 'UTF-8') ?>"
+                                        style="margin-left:6px;background:none;border:none;cursor:pointer;color:#475569;">✏️</button>
+                                <form id="edit-note-form-<?= $idPrestNote ?>" method="post" action="<?= route('prestations.notes', ['id' => $idPrestNote]) ?>" style="display:none;">
+                                    <input type="hidden" name="notes" value="">
+                                </form>
+                            <?php endif; ?>
                         </td>
                         <td data-label="Prix" style="white-space: nowrap;">
                             <?php
@@ -1399,6 +1410,27 @@
     closeBtn.addEventListener('click', closeModal);
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
+    });
+})();
+</script>
+
+<script>
+(function() {
+    document.addEventListener('click', function(e) {
+        var btn = e.target.closest('.btn-edit-note');
+        if (!btn) return;
+
+        var id = btn.getAttribute('data-prest-id');
+        var current = btn.getAttribute('data-current-note') || '';
+        var next = window.prompt('Modifier l\'observation :', current);
+        if (next === null) return;
+
+        var form = document.getElementById('edit-note-form-' + id);
+        if (!form) return;
+        var input = form.querySelector('input[name="notes"]');
+        if (!input) return;
+        input.value = next;
+        form.submit();
     });
 })();
 </script>

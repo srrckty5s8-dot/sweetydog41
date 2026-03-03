@@ -176,6 +176,7 @@ return [
 
     //prestation
     ['name' => 'prestations.store','method' => 'POST','action' => 'PrestationController@store','pattern' => '/animals/{id}/prestations'],
+    ['name' => 'prestations.notes','method' => 'POST','action' => 'PrestationController@updateNotes','pattern' => '/prestations/{id}/notes'],
 
     ['name' => 'invoices.download', 'method' => 'GET', 'action' => 'InvoiceController@download', 'pattern' => '/invoices/{id}/download'],
 ];
