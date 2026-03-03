@@ -224,13 +224,16 @@
         .tag-soin { background: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 6px; font-size: 0.76em; font-weight: 600; border: 1px solid #c8e6c9; margin-right: 4px; display:inline-flex; align-items:center; white-space:nowrap; }
         .tag-vente { background: #ede9fe; color: #6d28d9; padding: 4px 8px; border-radius: 6px; font-size: 0.76em; font-weight: 600; border: 1px solid #ddd6fe; margin-right: 4px; display:inline-flex; align-items:center; white-space:nowrap; }
         .tag-animal { background: #dbeafe; color: #1e40af; padding: 4px 10px; border-radius: 8px; font-size: 0.78em; font-weight: 700; border: 1px solid #bfdbfe; margin-right: 5px; display:inline-flex; align-items:center; gap:5px; white-space:nowrap; line-height:1.2; }
-        .prestations-compact { max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .prestations-compact { max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .actions-compact { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; }
+        .actions-compact a { margin: 0 !important; }
         .btn-download-pdf { text-decoration: none; background: #e8f5e9; color: #2e7d32; padding: 5px 10px; border-radius: 5px; font-size: 0.85em; font-weight: bold; border: 1px solid #c8e6c9; }
         .btn-download-pdf:hover { background: #c8e6c9; }
         .btn-email-invoice { text-decoration: none; background: #e0f2fe; color: #075985; padding: 5px 10px; border-radius: 5px; font-size: 0.85em; font-weight: bold; border: 1px solid #bae6fd; margin-left: 6px; }
         .btn-email-invoice:hover { background: #bae6fd; }
         .btn-generate-invoice { text-decoration: none; background: #fff3cd; color: #856404; padding: 5px 10px; border-radius: 5px; font-size: 0.85em; font-weight: bold; border: 1px solid #ffeaa7; }
         .btn-generate-invoice:hover { background: #ffeaa7; }
+        table tbody td { padding-top: 10px; padding-bottom: 10px; vertical-align: middle; }
 
         /* MODAL VENTE */
         .modal-overlay {
@@ -649,7 +652,7 @@
                             <?php endif; ?>
                         </td>
                         <td data-label="Prestations">
-                            <div class="prestations-compact" title="<?= htmlspecialchars((string)($soin['type_soin'] ?? '')) ?>">
+                            <div class="prestations-compact">
                             <?php
                             $tags = explode(", ", $soin['type_soin'] ?? '');
                             foreach ($tags as $tag) {
@@ -767,6 +770,7 @@
                                 }
                                 $generateUrl = route('invoices.generate', ['id' => $idPrest], $queryGenerate);
                             ?>
+                            <div class="actions-compact">
                             <?php if ($idPrest > 0) : ?>
                                 <a href="<?= htmlspecialchars($pdf_url) ?>" target="_blank" class="btn-download-pdf" title="Ouvrir la facture PDF">
                                     <i class="fa-solid fa-file-pdf"></i> Facture
@@ -779,7 +783,8 @@
                                     <i class="fa-solid fa-gear"></i> Générer
                                 </a>
                             <?php endif; ?>
-                            <span title="Prestation verrouillée" style="margin-left: 10px; cursor: help; filter: grayscale(100%); opacity: 0.5;"><i class="fa-solid fa-lock"></i></span>
+                            </div>
+                            <span title="Prestation verrouillée" style="margin-left: 6px; cursor: help; filter: grayscale(100%); opacity: 0.5;"><i class="fa-solid fa-lock"></i></span>
                         </td>
                     </tr>
                 <?php endforeach; ?>
