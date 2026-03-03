@@ -221,9 +221,10 @@
         .paiement-selector input[type="radio"]:checked + .paiement-label {
             background: #2563eb; border-color: #2563eb; color: white;
         }
-        .tag-soin { background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 6px; font-size: 0.8em; font-weight: 600; border: 1px solid #c8e6c9; margin-right: 5px; }
-        .tag-vente { background: #ede9fe; color: #6d28d9; padding: 4px 10px; border-radius: 6px; font-size: 0.8em; font-weight: 600; border: 1px solid #ddd6fe; margin-right: 5px; }
+        .tag-soin { background: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 6px; font-size: 0.76em; font-weight: 600; border: 1px solid #c8e6c9; margin-right: 4px; display:inline-flex; align-items:center; white-space:nowrap; }
+        .tag-vente { background: #ede9fe; color: #6d28d9; padding: 4px 8px; border-radius: 6px; font-size: 0.76em; font-weight: 600; border: 1px solid #ddd6fe; margin-right: 4px; display:inline-flex; align-items:center; white-space:nowrap; }
         .tag-animal { background: #dbeafe; color: #1e40af; padding: 4px 10px; border-radius: 8px; font-size: 0.78em; font-weight: 700; border: 1px solid #bfdbfe; margin-right: 5px; display:inline-flex; align-items:center; gap:5px; white-space:nowrap; line-height:1.2; }
+        .prestations-compact { max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .btn-download-pdf { text-decoration: none; background: #e8f5e9; color: #2e7d32; padding: 5px 10px; border-radius: 5px; font-size: 0.85em; font-weight: bold; border: 1px solid #c8e6c9; }
         .btn-download-pdf:hover { background: #c8e6c9; }
         .btn-email-invoice { text-decoration: none; background: #e0f2fe; color: #075985; padding: 5px 10px; border-radius: 5px; font-size: 0.85em; font-weight: bold; border: 1px solid #bae6fd; margin-left: 6px; }
@@ -648,18 +649,20 @@
                             <?php endif; ?>
                         </td>
                         <td data-label="Prestations">
+                            <div class="prestations-compact" title="<?= htmlspecialchars((string)($soin['type_soin'] ?? '')) ?>">
                             <?php
                             $tags = explode(", ", $soin['type_soin'] ?? '');
                             foreach ($tags as $tag) {
                                 $tag = trim($tag);
                                 if ($tag === '') continue;
                                 if (strpos($tag, 'Vente') === 0) {
-                                    echo "<span class='tag-vente'><i class='fa-solid fa-cart-shopping'></i> " . htmlspecialchars($tag) . "</span>";
+                                    echo "<span class='tag-vente'><i class='fa-solid fa-cart-shopping'></i>&nbsp;" . htmlspecialchars($tag) . "</span>";
                                 } else {
                                     echo "<span class='tag-soin'>" . htmlspecialchars($tag) . "</span>";
                                 }
                             }
                             ?>
+                            </div>
                         </td>
                         <?php
                             $notesBrutes = trim((string)($soin['notes'] ?? ''));
@@ -722,9 +725,7 @@
                             ?>
                             <span style="font-weight: bold; color: #2e7d32; white-space: nowrap;"><?= number_format($prixAffiche, 2, ',', ' '); ?>&nbsp;&euro;</span>
                             <?php if (abs($remiseMontant) > 0.0001): ?>
-                                <div style="font-size: 0.78em; color: #64748b; margin-top: 2px;">
-                                    remise: <?= number_format($remiseMontant, 2, ',', ' '); ?>&nbsp;&euro;
-                                </div>
+                                <span title="Remise: <?= htmlspecialchars(number_format($remiseMontant, 2, ',', ' ')) ?> €" style="margin-left:6px; color:#64748b; cursor:help;">ⓘ</span>
                             <?php endif; ?>
                         </td>
                         <td data-label="Paiement" style="text-align: center;">
