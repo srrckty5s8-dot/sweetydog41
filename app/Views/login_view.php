@@ -150,6 +150,7 @@
     <?php endif; ?>
 
     <form action="<?= htmlspecialchars(route('login')) ?>" method="POST">
+        <?= csrf_field(); ?>
         <div class="form-group">
             <label for="identifiant">Identifiant</label>
             <input type="text" id="identifiant" name="identifiant" placeholder="Ex: admin" required autofocus>

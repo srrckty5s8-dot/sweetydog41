@@ -391,3 +391,46 @@ function can($permission)
     // À développer avec un vrai système de permissions
     return isset($_SESSION['user']);
 }
+
+/**
+ * Retourne (et crée si besoin) le token CSRF de session.
+ */
+function csrf_token(): string
+{
+    if (empty($_SESSION['_csrf_token']) || !is_string($_SESSION['_csrf_token'])) {
+        $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
+    }
+
+    return $_SESSION['_csrf_token'];
+}
+
+/**
+ * Champ hidden prêt à injecter dans un <form method="POST">.
+ */
+function csrf_field(): string
+{
+    return '<input type="hidden" name="_csrf" value="' . e(csrf_token()) . '">';
+}
+
+/**
+ * Vérifie un token CSRF transmis.
+ */
+function csrf_verify(?string $token): bool
+{
+    $token = (string)$token;
+    $sessionToken = (string)($_SESSION['_csrf_token'] ?? '');
+
+    if ($token === '' || $sessionToken === '') {
+        return false;
+    }
+
+    return hash_equals($sessionToken, $token);
+}
+
+/**
+ * Regénère explicitement le token CSRF (utile après login/logout).
+ */
+function csrf_rotate(): void
+{
+    $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
+}

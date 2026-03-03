@@ -61,6 +61,13 @@ class AuthController extends Controller
 
         // Traiter le formulaire POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Vérifier le token CSRF du formulaire
+            if (!csrf_verify($_POST['_csrf'] ?? null)) {
+                $erreur = "Session expirée. Rechargez la page puis réessayez.";
+                $this->view('login_view', compact('erreur'));
+                return;
+            }
+
             // Récupérer les données du formulaire
             $identifiant = $_POST['identifiant'] ?? '';
             $mdp = $_POST['mdp'] ?? '';
@@ -85,6 +92,10 @@ class AuthController extends Controller
                     $_SESSION['admin_connecte'] = true;           // Flag de connexion
                     $_SESSION['admin_id'] = $user['id_utilisateur'];  // ID de l'utilisateur
                     $_SESSION['admin_nom'] = $user['identifiant'];    // Nom d'affichage
+
+                    // Durcir la session à la connexion
+                    session_regenerate_id(true);
+                    csrf_rotate();
 
                     // Rediriger vers le dashboard
                     redirect('clients.index');
@@ -116,9 +127,18 @@ class AuthController extends Controller
      */
     public function logout()
     {
+        // Supprimer toutes les données de session
+        $_SESSION = [];
+
+        // Expirer le cookie de session côté navigateur
+        if (ini_get('session.use_cookies')) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000, $params['path'] ?? '/', $params['domain'] ?? '', (bool)($params['secure'] ?? false), (bool)($params['httponly'] ?? true));
+        }
+
         // Supprimer complètement la session
         session_destroy();
-        
+
         // Rediriger vers le formulaire de login
         redirect('login');
     }

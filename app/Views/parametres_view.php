@@ -56,6 +56,7 @@
         <?php endif; ?>
 
         <form action="<?= htmlspecialchars(route('settings.index')) ?>" method="POST">
+            <?= csrf_field(); ?>
             <div style="margin-bottom: 15px;">
                 <label>Ancien mot de passe</label>
                 <input type="password" name="ancien_mdp" required style="width:100%; padding:10px; margin-top:5px; border:1px solid #ddd; border-radius:6px;">

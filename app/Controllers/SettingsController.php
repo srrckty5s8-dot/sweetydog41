@@ -16,6 +16,12 @@ class SettingsController extends Controller
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!csrf_verify($_POST['_csrf'] ?? null)) {
+                $erreur = "Session expirée. Rechargez la page puis réessayez.";
+                $this->view('parametres_view', compact('message', 'erreur'));
+                return;
+            }
+
             $ancien = $_POST['ancien_mdp'] ?? '';
             $nouveau = $_POST['nouveau_mdp'] ?? '';
             $confirm = $_POST['confirm_mdp'] ?? '';

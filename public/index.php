@@ -20,10 +20,50 @@
  * 4. Créer et lancer le routeur
  */
 
-// ========== 1. DÉMARRER LA SESSION ==========
+// ========== 1. DÉMARRER LA SESSION (VERSION DURCIE) ==========
 // La session permet de stocker des données entre les requêtes
 // Utilisée pour l'authentification, les messages flash, etc.
+$isHttps = (
+    (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || ((int)($_SERVER['SERVER_PORT'] ?? 0) === 443)
+    || (strtolower((string)($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '')) === 'https')
+);
+
+ini_set('session.use_strict_mode', '1');
+ini_set('session.use_only_cookies', '1');
+ini_set('session.cookie_httponly', '1');
+ini_set('session.cookie_samesite', 'Lax');
+if ($isHttps) {
+    ini_set('session.cookie_secure', '1');
+}
+
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'secure' => $isHttps,
+    'httponly' => true,
+    'samesite' => 'Lax',
+]);
+
 session_start();
+
+if (empty($_SESSION['_session_bootstrap_done'])) {
+    session_regenerate_id(true);
+    $_SESSION['_session_bootstrap_done'] = time();
+}
+
+// Headers de sécurité (gains rapides, faible risque)
+if (!headers_sent()) {
+    header_remove('X-Powered-By');
+    header('X-Content-Type-Options: nosniff');
+    header('X-Frame-Options: SAMEORIGIN');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+    header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
+    header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; img-src 'self' data: https:; font-src 'self' data: https://cdnjs.cloudflare.com; connect-src 'self' https:; frame-ancestors 'self'; base-uri 'self'; form-action 'self';");
+    if ($isHttps) {
+        header('Strict-Transport-Security: max-age=15552000; includeSubDomains');
+    }
+}
 
 // ========== ENCODAGE UTF-8 ==========
 mb_internal_encoding('UTF-8');
@@ -42,6 +82,26 @@ if (!file_exists($autoloadPath)) {
     die('Autoloader Composer introuvable. Lancez "composer install" ou "composer dump-autoload".');
 }
 require_once $autoloadPath;
+
+// ========== 2bis. PROTECTION CSRF (sur formulaires protégés) ==========
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+    $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '';
+    $requiresCsrf = false;
+
+    // Quick win : protéger immédiatement les formulaires sensibles
+    if (strpos($requestPath, '/auth/login') !== false || strpos($requestPath, '/settings') !== false) {
+        $requiresCsrf = true;
+    }
+
+    if ($requiresCsrf) {
+        $csrfFromRequest = (string)($_POST['_csrf'] ?? '');
+        if (!function_exists('csrf_verify') || !csrf_verify($csrfFromRequest)) {
+            http_response_code(419);
+            echo "Session expirée ou requête invalide. Rechargez la page puis réessayez.";
+            exit;
+        }
+    }
+}
 
 // ========== 3. CRÉER ET LANCER LE ROUTEUR ==========
 /**
