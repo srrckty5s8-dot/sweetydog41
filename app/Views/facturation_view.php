@@ -247,7 +247,7 @@
         .history-table th:nth-child(7), .history-table td:nth-child(7) { width: 10%; }
         .history-table th:nth-child(8), .history-table td:nth-child(8) { width: 20%; }
         .history-table td[data-label="Prestations"] .prestations-compact { max-width: none; max-height: none; overflow: visible; }
-        .history-table td[data-label="Actions"] { white-space: nowrap !important; }
+        .history-table td[data-label="Actions"] { white-space: nowrap !important; overflow: visible; padding-right: 14px !important; }
         .history-table td[data-label="Actions"] .btn-download-pdf,
         .history-table td[data-label="Actions"] .btn-email-invoice,
         .history-table td[data-label="Actions"] .btn-generate-invoice {
@@ -814,7 +814,7 @@
                                     <i class="fa-solid fa-gear"></i> Générer
                                 </a>
                             <?php endif; ?>
-                            <span title="Prestation verrouillée" style="margin-left: 6px; cursor: help; filter: grayscale(100%); opacity: 0.5;"><i class="fa-solid fa-lock"></i></span>
+                            <span title="Prestation verrouillée" style="margin-left: 4px; display:inline-flex; align-items:center; cursor: help; filter: grayscale(100%); opacity: 0.6;"><i class="fa-solid fa-lock"></i></span>
                         </td>
                     </tr>
                 <?php endforeach; ?>
