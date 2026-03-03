@@ -617,15 +617,14 @@
 
         <!-- HISTORIQUE DES FACTURES DU CLIENT -->
         <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-clock-rotate-left"></i> Historique des factures de <?= htmlspecialchars($proprio['prenom'] . ' ' . $proprio['nom']) ?></h3>
-        <div style="width:100%; overflow-x:visible;">
-        <table style="background: white; border-radius: 12px; overflow: hidden; border-collapse: separate; border-spacing: 0; width: 100%; table-layout: auto;">
+        <table style="background: white; border-radius: 12px; overflow: hidden; border-collapse: separate; border-spacing: 0; width: 100%;">
             <thead style="background: #f8f9fa;">
                 <tr>
                     <th style="padding: 15px; text-align: left;">Date</th>
                     <th style="text-align: left;">Animal</th>
                     <th style="text-align: left;">Prestations</th>
                     <th style="text-align: center;">Temps</th>
-                    <th style="text-align: left;">Observations</th>
+                    <th style="text-align: left; width: 150px;">Observations</th>
                     <th style="text-align: left;">Prix</th>
                     <th style="text-align: center;">Paiement</th>
                     <th style="text-align: center;">Actions</th>
@@ -698,7 +697,7 @@
                                 <i class="fa-regular fa-clock"></i> <?= htmlspecialchars($dureeAffichee) ?>
                             </span>
                         </td>
-                        <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em;">
+                        <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em; width: 150px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                             <?php
                                 $noteTexte = trim((string)$notesAffichees);
                                 $noteLen = function_exists('mb_strlen') ? mb_strlen($noteTexte, 'UTF-8') : strlen($noteTexte);
@@ -707,9 +706,10 @@
                                     $notePreview = function_exists('mb_substr')
                                         ? mb_substr($noteTexte, 0, $noteLimite, 'UTF-8')
                                         : substr($noteTexte, 0, $noteLimite);
-                                    echo '<button type="button" class="note-preview-btn" data-full-note="' . htmlspecialchars($noteTexte, ENT_QUOTES, 'UTF-8') . '" style="background:none;border:none;padding:0;color:#64748b;cursor:pointer;text-align:left;font:inherit;display:inline-block;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;">' . htmlspecialchars($notePreview) . '...</button>';
+                                    echo '<button type="button" class="note-preview-btn" data-full-note="' . htmlspecialchars($noteTexte, ENT_QUOTES, 'UTF-8') . '" style="background:none;border:none;padding:0;color:#64748b;cursor:pointer;text-align:left;font:inherit;display:inline-block;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;line-height:1.2;">' . htmlspecialchars($notePreview) . '...</button>';
                                 } else {
-                                    echo htmlspecialchars($noteTexte !== '' ? $noteTexte : '-');
+                                    $noteSimple = htmlspecialchars($noteTexte !== '' ? $noteTexte : '-');
+                                    echo '<span style="display:inline-block;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;line-height:1.2;">' . $noteSimple . '</span>';
                                 }
                             ?>
                         </td>
@@ -741,7 +741,7 @@
                                 }
                             ?>
                         </td>
-                        <td data-label="Actions" style="text-align: center;">
+                        <td data-label="Actions" style="text-align: center; white-space: nowrap;">
                             <?php
                                 $idPrest = (int)($soin['id_prestation'] ?? 0);
                                 $groupIds = trim((string)($soin['facture_group_ids'] ?? ''));
@@ -785,7 +785,6 @@
             <?php endif; ?>
             </tbody>
         </table>
-        </div>
 
     <?php endif; ?>
 
