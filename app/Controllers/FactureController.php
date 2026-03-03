@@ -121,7 +121,12 @@ class FactureController extends Controller
 
             // Soins de cet animal (sans les ventes)
             $types = !empty($aData['type_soin']) ? implode(", ", (array)$aData['type_soin']) : "Soin divers";
-            $notes = $aData['notes'] ?? '';
+            $notes = trim((string)($aData['notes'] ?? ''));
+            $dureeMinutes = (int)($aData['duree_minutes'] ?? 0);
+            if ($dureeMinutes > 0) {
+                $noteDuree = 'Durée toilettage: ' . $dureeMinutes . ' min';
+                $notes = $notes !== '' ? ($notes . ' | ' . $noteDuree) : $noteDuree;
+            }
 
             // Prix individuel de cet animal
             $prixAnimal = (float)str_replace(',', '.', (string)($aData['prix'] ?? '0'));

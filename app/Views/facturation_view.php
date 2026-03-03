@@ -623,6 +623,7 @@
                     <th style="padding: 15px; text-align: left;">Date</th>
                     <th style="text-align: left;">Animal</th>
                     <th style="text-align: left;">Prestations</th>
+                    <th style="text-align: center;">Temps</th>
                     <th style="text-align: left;">Observations</th>
                     <th style="text-align: left;">Prix</th>
                     <th style="text-align: center;">Paiement</th>
@@ -631,7 +632,7 @@
             </thead>
             <tbody>
             <?php if (empty($historique)): ?>
-                <tr><td colspan="7" style="padding: 20px; text-align: center; color: #94a3b8;">Aucune facture enregistrée pour ce client.</td></tr>
+                <tr><td colspan="8" style="padding: 20px; text-align: center; color: #94a3b8;">Aucune facture enregistrée pour ce client.</td></tr>
             <?php else: ?>
                 <?php foreach ($historique as $soin): ?>
                     <tr style="border-bottom: 1px solid #eee;">
@@ -660,7 +661,24 @@
                             }
                             ?>
                         </td>
-                        <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em;"><?= htmlspecialchars($soin['notes'] ?? '-'); ?></td>
+                        <?php
+                            $notesBrutes = trim((string)($soin['notes'] ?? ''));
+                            $dureeAffichee = '-';
+                            $notesAffichees = $notesBrutes;
+                            if ($notesBrutes !== '' && preg_match('/(?:Durée toilettage|Temps toilettage)\s*:\s*(\d+)\s*min/i', $notesBrutes, $mDuree)) {
+                                $dureeAffichee = (int)$mDuree[1] . ' min';
+                                $notesAffichees = trim(preg_replace('/\s*\|?\s*(?:Durée toilettage|Temps toilettage)\s*:\s*\d+\s*min\s*/i', ' ', $notesBrutes));
+                            }
+                            if ($notesAffichees === '') {
+                                $notesAffichees = '-';
+                            }
+                        ?>
+                        <td data-label="Temps" style="text-align: center; white-space: nowrap;">
+                            <span style="display:inline-flex; align-items:center; gap:4px; font-weight:700; color:#475569;">
+                                <i class="fa-regular fa-clock"></i> <?= htmlspecialchars($dureeAffichee) ?>
+                            </span>
+                        </td>
+                        <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em;"><?= htmlspecialchars($notesAffichees); ?></td>
                         <td data-label="Prix" style="white-space: nowrap;">
                             <?php
                                 $prixAffiche = isset($soin['prix_apres_remise'])
@@ -964,7 +982,9 @@
             var notes = block.querySelector('textarea') ? block.querySelector('textarea').value : '';
             var prixInput = block.querySelector('.prix-animal-input');
             var prix = prixInput ? prixInput.value : '';
-            existingData[id] = { soins: soins, notes: notes, prix: prix };
+            var dureeInput = block.querySelector('.duree-animal-input');
+            var duree = dureeInput ? dureeInput.value : '';
+            existingData[id] = { soins: soins, notes: notes, prix: prix, duree: duree };
         });
 
         soinsContainer.innerHTML = '';
@@ -979,7 +999,7 @@
 
         ids.forEach(function(id) {
             var animal = selectedAnimals[id];
-            var prev = existingData[id] || { soins: [], notes: '' };
+            var prev = existingData[id] || { soins: [], notes: '', duree: '' };
 
             var block = document.createElement('div');
             block.className = 'animal-soin-block';
@@ -1011,6 +1031,14 @@
             html += '<div style="margin-bottom: 15px;">';
             html += '<label style="font-weight:600; color:#475569;">Notes & Observations</label>';
             html += '<textarea name="animaux[' + id + '][notes]" rows="2" style="width:100%; border:1px solid #ddd; border-radius:8px; padding:10px; box-sizing:border-box; margin-top:5px;" placeholder="État du poil, comportement...">' + escapeHtml(prev.notes) + '</textarea>';
+            html += '</div>';
+
+            // Durée du toilettage
+            html += '<div style="margin-bottom: 15px;">';
+            html += '<label style="font-weight:600; color:#475569;"><i class="fa-regular fa-clock"></i> Temps de toilettage (minutes)</label>';
+            html += '<input type="number" min="1" step="1" name="animaux[' + id + '][duree_minutes]" class="duree-animal-input" placeholder="ex: 75"';
+            html += ' value="' + (prev.duree || '') + '"';
+            html += ' style="width:100%; padding:10px; border:2px solid #e2e8f0; border-radius:10px; background:#f8fafc; font-size:1rem; box-sizing:border-box; margin-top:5px;">';
             html += '</div>';
 
             // Prix par animal
