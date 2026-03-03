@@ -233,6 +233,23 @@
         .btn-generate-invoice:hover { background: #ffeaa7; }
         table tbody td { padding-top: 10px; padding-bottom: 10px; vertical-align: middle; }
 
+        .historique-table { width: 100%; table-layout: fixed; }
+        .historique-table th { font-size: 0.86rem; }
+        .historique-table th, .historique-table td { padding-left: 10px !important; padding-right: 10px !important; }
+        .historique-table th:nth-child(1), .historique-table td:nth-child(1) { width: 10%; }
+        .historique-table th:nth-child(2), .historique-table td:nth-child(2) { width: 9%; }
+        .historique-table th:nth-child(3), .historique-table td:nth-child(3) { width: 18%; }
+        .historique-table th:nth-child(4), .historique-table td:nth-child(4) { width: 8%; }
+        .historique-table th:nth-child(5), .historique-table td:nth-child(5) { width: 16%; }
+        .historique-table th:nth-child(6), .historique-table td:nth-child(6) { width: 9%; }
+        .historique-table th:nth-child(7), .historique-table td:nth-child(7) { width: 10%; }
+        .historique-table th:nth-child(8), .historique-table td:nth-child(8) { width: 20%; }
+        .historique-table td { overflow: hidden; }
+        .historique-table td[data-label="Actions"] { white-space: nowrap; }
+        .historique-table .btn-download-pdf,
+        .historique-table .btn-email-invoice,
+        .historique-table .btn-generate-invoice { padding: 4px 7px; font-size: 0.78em; }
+
         /* MODAL VENTE */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -619,14 +636,14 @@
 
         <!-- HISTORIQUE DES FACTURES DU CLIENT -->
         <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-clock-rotate-left"></i> Historique des factures de <?= htmlspecialchars($proprio['prenom'] . ' ' . $proprio['nom']) ?></h3>
-        <table style="background: white; border-radius: 12px; overflow: hidden; border-collapse: separate; border-spacing: 0; width: 100%;">
+        <table class="historique-table" style="background: white; border-radius: 12px; overflow: hidden; border-collapse: separate; border-spacing: 0; width: 100%;">
             <thead style="background: #f8f9fa;">
                 <tr>
                     <th style="padding: 15px; text-align: left;">Date</th>
                     <th style="text-align: left;">Animal</th>
                     <th style="text-align: left;">Prestations</th>
                     <th style="text-align: center;">Temps</th>
-                    <th style="text-align: left; width: 150px;">Observations</th>
+                    <th style="text-align: left;">Observations</th>
                     <th style="text-align: left;">Prix</th>
                     <th style="text-align: center;">Paiement</th>
                     <th style="text-align: center;">Actions</th>
@@ -701,7 +718,7 @@
                                 <i class="fa-regular fa-clock"></i> <?= htmlspecialchars($dureeAffichee) ?>
                             </span>
                         </td>
-                        <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em; width: 150px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                             <?php
                                 $noteTexte = trim((string)$notesAffichees);
                                 $noteLen = function_exists('mb_strlen') ? mb_strlen($noteTexte, 'UTF-8') : strlen($noteTexte);
@@ -773,7 +790,7 @@
                                     <i class="fa-solid fa-file-pdf"></i> Facture
                                 </a>
                                 <a href="<?= htmlspecialchars($emailUrl) ?>" class="btn-email-invoice" title="Envoyer la facture par mail">
-                                    <i class="fa-solid fa-paper-plane"></i> Envoyer par mail
+                                    <i class="fa-solid fa-paper-plane"></i> Email
                                 </a>
                             <?php else : ?>
                                 <a href="<?= htmlspecialchars($generateUrl) ?>" class="btn-generate-invoice" title="Générer la facture">
