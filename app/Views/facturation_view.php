@@ -231,24 +231,40 @@
         .btn-email-invoice:hover { background: #bae6fd; }
         .btn-generate-invoice { text-decoration: none; background: #fff3cd; color: #856404; padding: 5px 10px; border-radius: 5px; font-size: 0.85em; font-weight: bold; border: 1px solid #ffeaa7; }
         .btn-generate-invoice:hover { background: #ffeaa7; }
-        table tbody td { padding-top: 10px; padding-bottom: 10px; vertical-align: middle; }
-
-        .historique-table { width: 100%; table-layout: fixed; }
-        .historique-table th { font-size: 0.86rem; }
-        .historique-table th, .historique-table td { padding-left: 10px !important; padding-right: 10px !important; }
-        .historique-table th:nth-child(1), .historique-table td:nth-child(1) { width: 10%; }
-        .historique-table th:nth-child(2), .historique-table td:nth-child(2) { width: 9%; }
-        .historique-table th:nth-child(3), .historique-table td:nth-child(3) { width: 18%; }
-        .historique-table th:nth-child(4), .historique-table td:nth-child(4) { width: 8%; }
-        .historique-table th:nth-child(5), .historique-table td:nth-child(5) { width: 16%; }
-        .historique-table th:nth-child(6), .historique-table td:nth-child(6) { width: 9%; }
-        .historique-table th:nth-child(7), .historique-table td:nth-child(7) { width: 10%; }
-        .historique-table th:nth-child(8), .historique-table td:nth-child(8) { width: 20%; }
-        .historique-table td { overflow: hidden; }
-        .historique-table td[data-label="Actions"] { white-space: nowrap; }
-        .historique-table .btn-download-pdf,
-        .historique-table .btn-email-invoice,
-        .historique-table .btn-generate-invoice { padding: 4px 7px; font-size: 0.78em; }
+        .history-table-wrap { width: 100%; overflow-x: hidden; }
+        .history-table { width: 100% !important; display: table; table-layout: fixed; }
+        .history-table thead { display: table-header-group; }
+        .history-table tbody { display: table-row-group; }
+        .history-table tr { display: table-row; }
+        .history-table th, .history-table td { display: table-cell; overflow-wrap: anywhere; }
+        .history-table tbody td { padding-top: 10px; padding-bottom: 10px; vertical-align: middle; }
+        .history-table th:nth-child(1), .history-table td:nth-child(1) { width: 9%; }
+        .history-table th:nth-child(2), .history-table td:nth-child(2) { width: 9%; }
+        .history-table th:nth-child(3), .history-table td:nth-child(3) { width: 19%; }
+        .history-table th:nth-child(4), .history-table td:nth-child(4) { width: 8%; }
+        .history-table th:nth-child(5), .history-table td:nth-child(5) { width: 16%; }
+        .history-table th:nth-child(6), .history-table td:nth-child(6) { width: 9%; }
+        .history-table th:nth-child(7), .history-table td:nth-child(7) { width: 10%; }
+        .history-table th:nth-child(8), .history-table td:nth-child(8) { width: 20%; }
+        .history-table td[data-label="Prestations"] .prestations-compact { max-width: none; max-height: none; overflow: visible; }
+        .history-table td[data-label="Actions"] { white-space: nowrap !important; }
+        .history-table td[data-label="Actions"] .btn-download-pdf,
+        .history-table td[data-label="Actions"] .btn-email-invoice,
+        .history-table td[data-label="Actions"] .btn-generate-invoice {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1px 3px 1px 0;
+            font-size: 0.7em;
+            padding: 3px 6px;
+            line-height: 1.1;
+        }
+        .history-table td[data-label="Actions"] .btn-email-invoice { margin-left: 0; }
+        .history-table td[data-label="Actions"] .btn-download-pdf i,
+        .history-table td[data-label="Actions"] .btn-email-invoice i,
+        .history-table td[data-label="Actions"] .btn-generate-invoice i {
+            margin-right: 3px;
+        }
 
         /* MODAL VENTE */
         .modal-overlay {
@@ -362,12 +378,12 @@
             .paiement-selector { gap: 6px; }
             .paiement-label { padding: 8px 14px; font-size: 0.8em; }
             .prix-paiement-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
-            table thead { display: none; }
-            table, table tbody, table tr, table td { display: block; width: 100%; }
-            table tr { margin-bottom: 12px; border: 1px solid #ebf2ed; border-radius: 14px; overflow: hidden; background: white; box-shadow: 0 8px 16px rgba(15,23,42,0.06); }
-            table td { padding: 8px 15px !important; border-bottom: 1px solid #f8f9fa !important; text-align: left !important; }
-            table td:before { content: attr(data-label); font-weight: 700; font-size: 0.7rem; text-transform: uppercase; color: #94a3b8; display: block; margin-bottom: 3px; }
-            table td:last-child { border-bottom: none !important; }
+            .history-table thead { display: none; }
+            .history-table, .history-table tbody, .history-table tr, .history-table td { display: block !important; width: 100%; }
+            .history-table tr { margin-bottom: 12px; border: 1px solid #ebf2ed; border-radius: 14px; overflow: hidden; background: white; box-shadow: 0 8px 16px rgba(15,23,42,0.06); }
+            .history-table td { padding: 8px 15px !important; border-bottom: 1px solid #f8f9fa !important; text-align: left !important; }
+            .history-table td:before { content: attr(data-label); font-weight: 700; font-size: 0.7rem; text-transform: uppercase; color: #94a3b8; display: block; margin-bottom: 3px; }
+            .history-table td:last-child { border-bottom: none !important; }
             .tag-soin, .tag-vente, .tag-animal { font-size: 0.72em; padding: 3px 8px; margin-bottom: 3px; display: inline-block; }
             .btn-download-pdf, .btn-email-invoice, .btn-generate-invoice { font-size: 0.78em; padding: 4px 8px; min-height: 36px; display: inline-flex; align-items: center; justify-content: center; margin-left: 0; margin-right: 6px; margin-bottom: 4px; }
 
@@ -636,14 +652,15 @@
 
         <!-- HISTORIQUE DES FACTURES DU CLIENT -->
         <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-clock-rotate-left"></i> Historique des factures de <?= htmlspecialchars($proprio['prenom'] . ' ' . $proprio['nom']) ?></h3>
-        <table class="historique-table" style="background: white; border-radius: 12px; overflow: hidden; border-collapse: separate; border-spacing: 0; width: 100%;">
+        <div class="history-table-wrap">
+        <table class="history-table" style="background: white; border-radius: 12px; overflow: hidden; border-collapse: separate; border-spacing: 0; width: 100%;">
             <thead style="background: #f8f9fa;">
                 <tr>
                     <th style="padding: 15px; text-align: left;">Date</th>
                     <th style="text-align: left;">Animal</th>
                     <th style="text-align: left;">Prestations</th>
                     <th style="text-align: center;">Temps</th>
-                    <th style="text-align: left;">Observations</th>
+                    <th style="text-align: left; width: 150px;">Observations</th>
                     <th style="text-align: left;">Prix</th>
                     <th style="text-align: center;">Paiement</th>
                     <th style="text-align: center;">Actions</th>
@@ -718,7 +735,7 @@
                                 <i class="fa-regular fa-clock"></i> <?= htmlspecialchars($dureeAffichee) ?>
                             </span>
                         </td>
-                        <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <td data-label="Notes" style="color: #7f8c8d; font-size: 0.9em; width: 150px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                             <?php
                                 $noteTexte = trim((string)$notesAffichees);
                                 $noteLen = function_exists('mb_strlen') ? mb_strlen($noteTexte, 'UTF-8') : strlen($noteTexte);
@@ -790,7 +807,7 @@
                                     <i class="fa-solid fa-file-pdf"></i> Facture
                                 </a>
                                 <a href="<?= htmlspecialchars($emailUrl) ?>" class="btn-email-invoice" title="Envoyer la facture par mail">
-                                    <i class="fa-solid fa-paper-plane"></i> Email
+                                    <i class="fa-solid fa-paper-plane"></i> Envoyer par mail
                                 </a>
                             <?php else : ?>
                                 <a href="<?= htmlspecialchars($generateUrl) ?>" class="btn-generate-invoice" title="Générer la facture">
@@ -804,6 +821,7 @@
             <?php endif; ?>
             </tbody>
         </table>
+        </div>
 
     <?php endif; ?>
 
