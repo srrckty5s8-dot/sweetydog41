@@ -224,7 +224,7 @@
         .tag-soin { background: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 6px; font-size: 0.76em; font-weight: 600; border: 1px solid #c8e6c9; margin-right: 4px; display:inline-flex; align-items:center; white-space:nowrap; }
         .tag-vente { background: #ede9fe; color: #6d28d9; padding: 4px 8px; border-radius: 6px; font-size: 0.76em; font-weight: 600; border: 1px solid #ddd6fe; margin-right: 4px; display:inline-flex; align-items:center; white-space:nowrap; }
         .tag-animal { background: #dbeafe; color: #1e40af; padding: 4px 10px; border-radius: 8px; font-size: 0.78em; font-weight: 700; border: 1px solid #bfdbfe; margin-right: 5px; display:inline-flex; align-items:center; gap:5px; white-space:nowrap; line-height:1.2; }
-        .prestations-compact { max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .prestations-compact { max-width: 200px; display:flex; flex-wrap:wrap; gap:4px; max-height: 2.7em; overflow:hidden; align-items:flex-start; }
         .btn-download-pdf { text-decoration: none; background: #e8f5e9; color: #2e7d32; padding: 5px 10px; border-radius: 5px; font-size: 0.85em; font-weight: bold; border: 1px solid #c8e6c9; }
         .btn-download-pdf:hover { background: #c8e6c9; }
         .btn-email-invoice { text-decoration: none; background: #e0f2fe; color: #075985; padding: 5px 10px; border-radius: 5px; font-size: 0.85em; font-weight: bold; border: 1px solid #bae6fd; margin-left: 6px; }
