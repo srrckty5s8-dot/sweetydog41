@@ -122,9 +122,24 @@ class FactureController extends Controller
             // Soins de cet animal (sans les ventes)
             $types = !empty($aData['type_soin']) ? implode(", ", (array)$aData['type_soin']) : "Soin divers";
             $notes = trim((string)($aData['notes'] ?? ''));
-            $dureeMinutes = (int)($aData['duree_minutes'] ?? 0);
+            $dureeRaw = trim((string)($aData['duree_minutes'] ?? ''));
+            $dureeMinutes = 0;
+            if ($dureeRaw !== '') {
+                if (preg_match('/^(\d+)\s*h\s*(\d{1,2})?$/i', $dureeRaw, $mDureeHeure)) {
+                    $heures = (int)$mDureeHeure[1];
+                    $minutes = isset($mDureeHeure[2]) ? (int)$mDureeHeure[2] : 0;
+                    if ($minutes > 59) $minutes = 59;
+                    $dureeMinutes = ($heures * 60) + $minutes;
+                } elseif (preg_match('/^(\d+)$/', $dureeRaw, $mDureeMin)) {
+                    // Compatibilité: ancienne saisie en minutes
+                    $dureeMinutes = (int)$mDureeMin[1];
+                }
+            }
             if ($dureeMinutes > 0) {
-                $noteDuree = 'Durée toilettage: ' . $dureeMinutes . ' min';
+                $heures = intdiv($dureeMinutes, 60);
+                $minutes = $dureeMinutes % 60;
+                $dureeFormatee = $heures . 'h' . str_pad((string)$minutes, 2, '0', STR_PAD_LEFT);
+                $noteDuree = 'Durée toilettage: ' . $dureeFormatee;
                 $notes = $notes !== '' ? ($notes . ' | ' . $noteDuree) : $noteDuree;
             }
 

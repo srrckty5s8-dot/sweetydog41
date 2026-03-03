@@ -665,10 +665,24 @@
                             $notesBrutes = trim((string)($soin['notes'] ?? ''));
                             $dureeAffichee = '-';
                             $notesAffichees = $notesBrutes;
-                            if ($notesBrutes !== '' && preg_match('/(?:Durée toilettage|Temps toilettage)\s*:\s*(\d+)\s*min/i', $notesBrutes, $mDuree)) {
-                                $dureeAffichee = (int)$mDuree[1] . ' min';
+
+                            // Nouveau format: "Durée toilettage: 1h30"
+                            if ($notesBrutes !== '' && preg_match('/(?:Durée toilettage|Temps toilettage)\s*:\s*(\d+)\s*h\s*(\d{1,2})?/i', $notesBrutes, $mDureeHm)) {
+                                $h = (int)$mDureeHm[1];
+                                $m = isset($mDureeHm[2]) ? (int)$mDureeHm[2] : 0;
+                                if ($m > 59) $m = 59;
+                                $dureeAffichee = $h . 'h' . str_pad((string)$m, 2, '0', STR_PAD_LEFT);
+                                $notesAffichees = trim(preg_replace('/\s*\|?\s*(?:Durée toilettage|Temps toilettage)\s*:\s*\d+\s*h\s*\d{0,2}\s*/i', ' ', $notesBrutes));
+                            }
+                            // Ancien format: "Durée toilettage: 90 min" (compatibilité)
+                            elseif ($notesBrutes !== '' && preg_match('/(?:Durée toilettage|Temps toilettage)\s*:\s*(\d+)\s*min/i', $notesBrutes, $mDureeMin)) {
+                                $totalMin = (int)$mDureeMin[1];
+                                $h = intdiv($totalMin, 60);
+                                $m = $totalMin % 60;
+                                $dureeAffichee = $h . 'h' . str_pad((string)$m, 2, '0', STR_PAD_LEFT);
                                 $notesAffichees = trim(preg_replace('/\s*\|?\s*(?:Durée toilettage|Temps toilettage)\s*:\s*\d+\s*min\s*/i', ' ', $notesBrutes));
                             }
+
                             if ($notesAffichees === '') {
                                 $notesAffichees = '-';
                             }
@@ -1035,10 +1049,11 @@
 
             // Durée du toilettage
             html += '<div style="margin-bottom: 15px;">';
-            html += '<label style="font-weight:600; color:#475569;"><i class="fa-regular fa-clock"></i> Temps de toilettage (minutes)</label>';
-            html += '<input type="number" min="1" step="1" name="animaux[' + id + '][duree_minutes]" class="duree-animal-input" placeholder="ex: 75"';
+            html += '<label style="font-weight:600; color:#475569;"><i class="fa-regular fa-clock"></i> Temps de toilettage (format: 1h30)</label>';
+            html += '<input type="text" name="animaux[' + id + '][duree_minutes]" class="duree-animal-input" placeholder="ex: 1h30" pattern="^\\d+\\s*h\\s*\\d{0,2}$"';
             html += ' value="' + (prev.duree || '') + '"';
             html += ' style="width:100%; padding:10px; border:2px solid #e2e8f0; border-radius:10px; background:#f8fafc; font-size:1rem; box-sizing:border-box; margin-top:5px;">';
+            html += '<small style="display:block; margin-top:6px; color:#64748b;">Exemple: 1h30, 2h00, 0h45</small>';
             html += '</div>';
 
             // Prix par animal
