@@ -617,7 +617,8 @@
 
         <!-- HISTORIQUE DES FACTURES DU CLIENT -->
         <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-clock-rotate-left"></i> Historique des factures de <?= htmlspecialchars($proprio['prenom'] . ' ' . $proprio['nom']) ?></h3>
-        <table style="background: white; border-radius: 12px; overflow: hidden; border-collapse: separate; border-spacing: 0; width: 100%;">
+        <div style="width:100%; overflow-x:auto;">
+        <table style="background: white; border-radius: 12px; overflow: hidden; border-collapse: separate; border-spacing: 0; width: 100%; min-width: 1050px;">
             <thead style="background: #f8f9fa;">
                 <tr>
                     <th style="padding: 15px; text-align: left;">Date</th>
@@ -701,7 +702,7 @@
                                     $notePreview = function_exists('mb_substr')
                                         ? mb_substr($noteTexte, 0, $noteLimite, 'UTF-8')
                                         : substr($noteTexte, 0, $noteLimite);
-                                    echo '<button type="button" class="note-preview-btn" data-full-note="' . htmlspecialchars($noteTexte, ENT_QUOTES, 'UTF-8') . '" style="background:none;border:none;padding:0;color:#64748b;cursor:pointer;text-align:left;font:inherit;display:inline-block;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;">' . htmlspecialchars($notePreview) . '...</button>';
+                                    echo '<button type="button" class="note-preview-btn" data-full-note="' . htmlspecialchars($noteTexte, ENT_QUOTES, 'UTF-8') . '" style="background:none;border:none;padding:0;color:#64748b;cursor:pointer;text-align:left;font:inherit;display:inline-block;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;">' . htmlspecialchars($notePreview) . '...</button>';
                                 } else {
                                     echo htmlspecialchars($noteTexte !== '' ? $noteTexte : '-');
                                 }
@@ -779,6 +780,7 @@
             <?php endif; ?>
             </tbody>
         </table>
+        </div>
 
     <?php endif; ?>
 
