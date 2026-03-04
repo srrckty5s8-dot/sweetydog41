@@ -119,7 +119,9 @@ class Declaration
 
         $sql = "SELECT COUNT(*) FROM Prestations
                 WHERE MONTH(date_soin) = :mois
-                  AND YEAR(date_soin)  = :annee";
+                  AND YEAR(date_soin)  = :annee
+                  AND type_soin NOT LIKE 'Vente%'
+                  AND type_soin <> 'Remise commerciale'";
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['mois' => $mois, 'annee' => $annee]);
