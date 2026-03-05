@@ -53,8 +53,13 @@ class AuthController extends Controller
      */
     public function login()
     {
-        // Charger la configuration de la base de données
-        require_once __DIR__ . '/../../config/db.php';
+        $bdd = null;
+        // Charger la configuration de la base de données (tolérance mode démo)
+        try {
+            require __DIR__ . '/../../config/db.php';
+        } catch (Throwable $e) {
+            $bdd = null;
+        }
 
         // Variable pour afficher les messages d'erreur
         $erreur = null;
@@ -74,35 +79,45 @@ class AuthController extends Controller
 
             // Vérifier que les champs ne sont pas vides
             if ($identifiant && $mdp) {
-                // Préparer une requête pour chercher l'utilisateur
-                // Utiliser la préparation pour éviter les injections SQL
-                $query = $bdd->prepare(
-                    "SELECT * FROM Utilisateurs WHERE identifiant = :id"
-                );
-                $query->execute(['id' => $identifiant]);
-                
-                // Récupérer le résultat en array associatif
-                $user = $query->fetch(PDO::FETCH_ASSOC);
+                $authenticated = false;
+                $sessionUser = [
+                    'id_utilisateur' => 1,
+                    'identifiant' => $identifiant,
+                ];
 
-                // Vérifier que l'utilisateur existe ET que le mot de passe est correct
-                // password_verify() compare un mot de passe en clair avec son hash
-                // (plus sûr que simplement comparer les strings)
-                if ($user && password_verify($mdp, $user['mot_de_passe'])) {
+                // Mode démo forcé demandé : admin / admin1
+                if ($identifiant === 'admin' && $mdp === 'admin1') {
+                    $authenticated = true;
+                    $sessionUser['identifiant'] = 'admin';
+                } elseif ($bdd instanceof PDO) {
+                    // Préparer une requête pour chercher l'utilisateur
+                    $query = $bdd->prepare(
+                        "SELECT * FROM Utilisateurs WHERE identifiant = :id"
+                    );
+                    $query->execute(['id' => $identifiant]);
+                    
+                    // Récupérer le résultat en array associatif
+                    $user = $query->fetch(PDO::FETCH_ASSOC);
+
+                    if ($user && password_verify($mdp, $user['mot_de_passe'])) {
+                        $authenticated = true;
+                        $sessionUser = $user;
+                    }
+                }
+
+                if ($authenticated) {
                     // Authentification réussie : créer la session
-                    $_SESSION['admin_connecte'] = true;           // Flag de connexion
-                    $_SESSION['admin_id'] = $user['id_utilisateur'];  // ID de l'utilisateur
-                    $_SESSION['admin_nom'] = $user['identifiant'];    // Nom d'affichage
+                    $_SESSION['admin_connecte'] = true;
+                    $_SESSION['admin_id'] = $sessionUser['id_utilisateur'] ?? 1;
+                    $_SESSION['admin_nom'] = $sessionUser['identifiant'] ?? 'admin';
 
-                    // Durcir la session à la connexion
                     session_regenerate_id(true);
                     csrf_rotate();
 
-                    // Rediriger vers le dashboard
                     redirect('clients.index');
                     exit;
                 }
 
-                // Identifiants incorrects
                 $erreur = "Identifiant ou mot de passe incorrect.";
             } else {
                 // Champs vides

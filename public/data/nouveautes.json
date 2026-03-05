@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Micro-amélioration performance",
+    "body": "Nettoyage progressif du rendu pour lecture plus claire.",
+    "updated_at": "2026-03-05 19:18:39"
+  },
+  {
+    "title": "Micro-amélioration performance",
+    "body": "Nettoyage progressif du rendu pour lecture plus claire.",
+    "updated_at": "2026-03-05 19:16:22"
+  },
+  {
+    "title": "Initialisation mode nouveautés",
+    "body": "Le flux de nouveautés est prêt. Les prochaines entrées seront ajoutées automatiquement par cron.",
+    "updated_at": "2026-03-05 19:20:00"
+  }
+]
