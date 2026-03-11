@@ -134,6 +134,27 @@ $navQueryBase = is_array($navigationQuery ?? null) ? $navigationQuery : [];
             text-decoration: none; background: #e8f5e9; color: #2e7d32;
             border: 1px solid #c8e6c9; border-radius: 8px; padding: 6px 10px; font-weight: 700;
         }
+        .month-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-download-month {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            background: #ecfeff;
+            color: #0e7490;
+            border: 1px solid #bae6fd;
+            border-radius: 999px;
+            padding: 5px 10px;
+            font-size: .78rem;
+            font-weight: 800;
+        }
+        .btn-download-month:hover {
+            background: #cffafe;
+        }
         .empty-state {
             text-align: center; background: #fff; border-radius: 14px; padding: 40px 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05); color: #64748b;
@@ -226,7 +247,12 @@ $navQueryBase = is_array($navigationQuery ?? null) ? $navigationQuery : [];
                     <details class="month-section">
                         <summary class="month-header">
                             <span><?= htmlspecialchars($monthName) ?></span>
-                            <span style="display: inline-flex; align-items: center; gap: 10px;">
+                            <span class="month-actions">
+                                <a class="btn-download-month"
+                                   href="<?= route('declaration.invoices.download.month', [], $navQueryBase + ['annee' => (int)$year, 'mois' => $monthNum]) ?>"
+                                   onclick="event.stopPropagation();">
+                                    <i class="fa-solid fa-download"></i> Télécharger le mois
+                                </a>
                                 <span class="month-count"><?= count($files) ?> facture(s)</span>
                                 <span class="month-toggle"><i class="fa-solid fa-chevron-down"></i></span>
                             </span>

@@ -139,6 +139,80 @@ class DeclarationController extends Controller
         exit;
     }
 
+    public function downloadMonthInvoices()
+    {
+        $this->requireLogin();
+
+        $year = isset($_GET['annee']) ? (int)$_GET['annee'] : 0;
+        $month = isset($_GET['mois']) ? (int)$_GET['mois'] : 0;
+
+        if ($year < 2000 || $year > 2100 || $month < 1 || $month > 12) {
+            http_response_code(400);
+            die('Période invalide');
+        }
+
+        $groupedInvoices = $this->collectInvoicesByYearMonth();
+        $yearKey = (string)$year;
+        $monthKey = str_pad((string)$month, 2, '0', STR_PAD_LEFT);
+        $files = $groupedInvoices[$yearKey][$monthKey] ?? [];
+
+        if (empty($files)) {
+            http_response_code(404);
+            die('Aucune facture pour cette période');
+        }
+
+        if (!class_exists('ZipArchive')) {
+            http_response_code(500);
+            die('ZipArchive non disponible sur le serveur');
+        }
+
+        $tmpZip = tempnam(sys_get_temp_dir(), 'factures_mois_');
+        if ($tmpZip === false) {
+            http_response_code(500);
+            die('Impossible de préparer le téléchargement');
+        }
+
+        $zip = new ZipArchive();
+        if ($zip->open($tmpZip, ZipArchive::OVERWRITE) !== true) {
+            @unlink($tmpZip);
+            http_response_code(500);
+            die('Impossible de créer l\'archive ZIP');
+        }
+
+        $added = 0;
+        foreach ($files as $file) {
+            $relativePath = (string)($file['relative_path'] ?? '');
+            $filePath = $this->resolveInvoicePath($relativePath);
+            if ($filePath === '' || !is_file($filePath)) {
+                continue;
+            }
+
+            $entryName = basename($filePath);
+            if ($zip->addFile($filePath, $entryName)) {
+                $added++;
+            }
+        }
+
+        $zip->close();
+
+        if ($added === 0 || !is_file($tmpZip)) {
+            @unlink($tmpZip);
+            http_response_code(404);
+            die('Aucun fichier téléchargeable pour cette période');
+        }
+
+        $downloadName = sprintf('factures-sweetydog-%04d-%02d.zip', $year, $month);
+        header('Content-Type: application/zip');
+        header('Content-Disposition: attachment; filename="' . $downloadName . '"');
+        header('Content-Length: ' . filesize($tmpZip));
+        header('Cache-Control: private, max-age=0, must-revalidate');
+        header('Pragma: public');
+
+        readfile($tmpZip);
+        @unlink($tmpZip);
+        exit;
+    }
+
     private function collectInvoicesByYearMonth(): array
     {
         $grouped = [];

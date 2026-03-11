@@ -95,6 +95,7 @@ return [
      * {id} = ID du client à supprimer
      */
     ['name' => 'clients.delete', 'method' => 'POST', 'action' => 'ClientController@delete', 'pattern' => '/clients/{id}/delete'],
+    ['name' => 'clients.export', 'method' => 'GET', 'action' => 'ClientController@exportCsv', 'pattern' => '/clients/export.csv'],
 
     // ========== GESTION DES ANIMAUX ==========
     /**
@@ -164,6 +165,7 @@ return [
     ['name' => 'declaration.monthly', 'method' => 'GET|POST', 'action' => 'DeclarationController@monthlyRevenue', 'pattern' => '/declaration/mensuel'],
     ['name' => 'declaration.invoices', 'method' => 'GET', 'action' => 'DeclarationController@invoices', 'pattern' => '/declaration/factures'],
     ['name' => 'declaration.invoices.open', 'method' => 'GET', 'action' => 'DeclarationController@openInvoice', 'pattern' => '/declaration/factures/open'],
+    ['name' => 'declaration.invoices.download.month', 'method' => 'GET', 'action' => 'DeclarationController@downloadMonthInvoices', 'pattern' => '/declaration/factures/download-month'],
 
     // ========== FACTURATION ==========
     ['name' => 'facturation.index', 'method' => 'GET', 'action' => 'FactureController@index', 'pattern' => '/facturation'],
