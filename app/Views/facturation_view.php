@@ -1039,7 +1039,15 @@
 })();
 
 (function() {
-    var soinsTypes = ['Bain Brush', 'Coupe Ciseaux', 'Coupe', 'Tonte', 'Épilation', 'Coupe Griffes', 'Retouche', 'New Look'];
+    var soinsTypesParEspece = {
+        chat: ['Brossage', 'Bain', 'Coupe Griffes', 'Retouches', 'Tonte'],
+        default: ['Bain Brush', 'Coupe Ciseaux', 'Coupe', 'Tonte', 'Épilation', 'Coupe Griffes', 'Retouche', 'New Look']
+    };
+
+    function getSoinsTypesForEspece(espece) {
+        var key = String(espece || '').toLowerCase();
+        return soinsTypesParEspece[key] || soinsTypesParEspece.default;
+    }
 
     // === MULTI-SÉLECTION DES ANIMAUX ===
     var animalCards = document.querySelectorAll('.animal-card');
@@ -1097,6 +1105,7 @@
             html += '<div style="margin-bottom: 15px;">';
             html += '<label style="font-weight:600; color:#475569;">Types de soins</label>';
             html += '<div class="prestation-selector">';
+            var soinsTypes = getSoinsTypesForEspece(animal.espece);
             soinsTypes.forEach(function(soin, i) {
                 var cbId = 'soin-' + id + '-' + i;
                 var checked = prev.soins.indexOf(soin) !== -1 ? ' checked' : '';
