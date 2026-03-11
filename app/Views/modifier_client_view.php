@@ -31,7 +31,7 @@
       color: var(--vert-fonce);
     }
     
-    .form-row input {
+    .form-row input:not([type="radio"]) {
       width: 100%;
     }
     
@@ -123,6 +123,12 @@
       align-items: center;
       font-weight: 500;
       color: #334155;
+    }
+
+    .radio-row input[type="radio"] {
+      width: auto !important;
+      margin: 0;
+      flex: 0 0 auto;
     }
 
     @media (max-width: 600px) {
