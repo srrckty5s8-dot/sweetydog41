@@ -181,6 +181,36 @@ public static function updateProprietaire(int $id, array $data): bool
     ]);
 }
 
+public static function updateAnimalByOwner(int $idAnimal, int $idProprietaire, array $data): bool
+{
+    $pdo = Database::getConnection();
+
+    $sql = "UPDATE Animaux
+            SET nom_animal = :nom_animal,
+                espece = :espece,
+                race = :race,
+                poids = :poids,
+                steril = :steril,
+                sexe = :sexe,
+                date_naissance = :date_naissance
+            WHERE id_animal = :id_animal
+              AND id_proprietaire = :id_proprietaire";
+
+    $stmt = $pdo->prepare($sql);
+
+    return $stmt->execute([
+        'nom_animal' => $data['nom_animal'],
+        'espece' => $data['espece'],
+        'race' => $data['race'],
+        'poids' => $data['poids'],
+        'steril' => $data['steril'],
+        'sexe' => $data['sexe'],
+        'date_naissance' => $data['date_naissance'],
+        'id_animal' => $idAnimal,
+        'id_proprietaire' => $idProprietaire,
+    ]);
+}
+
 public static function deleteProprietaire(int $id): bool
 {
     if ($id <= 0) {

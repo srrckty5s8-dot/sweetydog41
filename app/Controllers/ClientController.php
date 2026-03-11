@@ -219,8 +219,10 @@ class ClientController extends Controller
             $proprio['ville'] = trim($lignes[1] ?? '');
         }
 
+        $animaux = Client::getAnimauxByProprietaire($id);
+
         // Afficher le formulaire de modification
-        $this->view('modifier_client_view', compact('proprio'));
+        $this->view('modifier_client_view', compact('proprio', 'animaux'));
     }
 
     /**
@@ -269,8 +271,38 @@ class ClientController extends Controller
             'adresse' => $adresse,
         ]);
 
+        // Mettre à jour les animaux du propriétaire (même page)
+        $animauxPayload = $_POST['animaux'] ?? [];
+        if (is_array($animauxPayload)) {
+            foreach ($animauxPayload as $animalId => $animalData) {
+                $animalId = (int)$animalId;
+                if ($animalId <= 0 || !is_array($animalData)) {
+                    continue;
+                }
+
+                $nomAnimal = trim((string)($animalData['nom_animal'] ?? ''));
+                if ($nomAnimal === '') {
+                    continue;
+                }
+
+                $poidsRaw = trim((string)($animalData['poids'] ?? ''));
+                $poids = $poidsRaw !== '' ? (float)$poidsRaw : null;
+                $dateNaissance = trim((string)($animalData['date_naissance'] ?? ''));
+
+                Client::updateAnimalByOwner($animalId, $id, [
+                    'nom_animal' => $nomAnimal,
+                    'espece' => trim((string)($animalData['espece'] ?? '')),
+                    'race' => trim((string)($animalData['race'] ?? '')),
+                    'poids' => $poids,
+                    'steril' => isset($animalData['steril']) ? (int)$animalData['steril'] : 0,
+                    'sexe' => trim((string)($animalData['sexe'] ?? '')) ?: null,
+                    'date_naissance' => $dateNaissance !== '' ? $dateNaissance : null,
+                ]);
+            }
+        }
+
         // Afficher un message de succès et rediriger vers la liste
-        flashMessage('success', "✅ Client modifié.");
+        flashMessage('success', "✅ Client et animaux modifiés.");
         redirect('clients.index');
         exit;
     }
