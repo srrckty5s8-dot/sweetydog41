@@ -275,7 +275,32 @@
             <div class="form-row">
               <div>
                 <label>Date de naissance</label>
-                <input type="date" name="animaux[<?= $idAnimal ?>][date_naissance]" value="<?= htmlspecialchars((string)($animal['date_naissance'] ?? '')) ?>">
+                <?php
+                  $dnIso = (string)($animal['date_naissance'] ?? '');
+                  $dnAffichage = '';
+                  if ($dnIso !== '') {
+                    $partsDn = explode('-', $dnIso);
+                    if (count($partsDn) === 3) {
+                      $dnAffichage = $partsDn[2] . '/' . $partsDn[1] . '/' . $partsDn[0];
+                    }
+                  }
+                ?>
+                <input
+                  type="text"
+                  class="date-naissance-display"
+                  data-target="date-naissance-hidden-<?= $idAnimal ?>"
+                  placeholder="jj/mm/aaaa"
+                  maxlength="10"
+                  autocomplete="off"
+                  inputmode="numeric"
+                  value="<?= htmlspecialchars($dnAffichage) ?>"
+                >
+                <input
+                  type="hidden"
+                  name="animaux[<?= $idAnimal ?>][date_naissance]"
+                  id="date-naissance-hidden-<?= $idAnimal ?>"
+                  value="<?= htmlspecialchars($dnIso) ?>"
+                >
               </div>
               <div>
                 <label>Sexe</label>
@@ -333,5 +358,50 @@
   <!-- Bouton Retour stylé -->
   <a href="<?= route('clients.index') ?>" class="btn-back">← Retour liste</a>
 </div>
+
+<script>
+(function() {
+  function wireDateInput(display) {
+    var targetId = display.getAttribute('data-target');
+    var hidden = targetId ? document.getElementById(targetId) : null;
+    if (!hidden) return;
+
+    display.addEventListener('input', function() {
+      var v = display.value.replace(/[^\d]/g, '');
+      if (v.length > 8) v = v.substring(0, 8);
+
+      var formatted = '';
+      if (v.length > 4) {
+        formatted = v.substring(0, 2) + '/' + v.substring(2, 4) + '/' + v.substring(4);
+      } else if (v.length > 2) {
+        formatted = v.substring(0, 2) + '/' + v.substring(2);
+      } else {
+        formatted = v;
+      }
+      display.value = formatted;
+
+      if (v.length === 8) {
+        var jour = parseInt(v.substring(0, 2), 10);
+        var mois = parseInt(v.substring(2, 4), 10);
+        var annee = parseInt(v.substring(4, 8), 10);
+        var currentYear = new Date().getFullYear();
+
+        if (jour >= 1 && jour <= 31 && mois >= 1 && mois <= 12 && annee >= 1900 && annee <= currentYear) {
+          hidden.value = String(annee) + '-' + v.substring(2, 4) + '-' + v.substring(0, 2);
+          display.style.borderColor = '#2e7d32';
+        } else {
+          hidden.value = '';
+          display.style.borderColor = '#e63946';
+        }
+      } else {
+        hidden.value = '';
+        display.style.borderColor = '';
+      }
+    });
+  }
+
+  document.querySelectorAll('.date-naissance-display').forEach(wireDateInput);
+})();
+</script>
 </body>
 </html>
