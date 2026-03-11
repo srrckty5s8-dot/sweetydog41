@@ -1,5 +1,5 @@
 <?php
-$host = getenv('DB_HOST') ?: '127.0.0.1';
+$host = 'localhost';
 $db   = 'mon_salon';       // ← Remplacer par le nom de votre base o2switch
 $user = 'root';    // ← Remplacer par votre utilisateur MySQL o2switch
 $pass = 'root';   // ← Remplacer par votre mot de passe MySQL o2switch
@@ -14,6 +14,6 @@ try {
     ]);
     $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (Exception $e) {
-    $bdd = null;
+    die("Erreur de connexion : " . $e->getMessage());
 }
 // NE PAS METTRE DE BALISE DE FERMETURE ICI

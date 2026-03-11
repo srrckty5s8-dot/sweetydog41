@@ -164,9 +164,7 @@
         <button type="submit" class="btn-submit">S'identifier</button>
     </form>
 
-    <div class="footer-text" style="text-align:left;line-height:1.5;">
-        <strong>Mode démo</strong> : identifiant <code>admin</code> / mot de passe <code>admin1</code><br>
-        Voir les nouveautés : <a href="/nouveautes.php">/nouveautes.php</a><br><br>
+    <div class="footer-text">
         &copy; 2026 SweetyDog Management System
     </div>
 </div>
