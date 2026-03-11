@@ -1041,7 +1041,8 @@
 (function() {
     var soinsTypesParEspece = {
         chat: ['Brossage', 'Bain', 'Coupe Griffes', 'Retouches', 'Tonte'],
-        default: ['Bain Brush', 'Coupe Ciseaux', 'Coupe', 'Tonte', 'Épilation', 'Coupe Griffes', 'Retouche', 'New Look']
+        chien: ['Bain Brush', 'Coupe Ciseaux', 'Coupe', 'Tonte', 'Épilation', 'Coupe Ongles', 'Retouche', 'New Look'],
+        default: ['Bain Brush', 'Coupe Ciseaux', 'Coupe', 'Tonte', 'Épilation', 'Coupe Ongles', 'Retouche', 'New Look']
     };
 
     function getSoinsTypesForEspece(espece) {
