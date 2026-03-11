@@ -232,7 +232,18 @@
         <?php foreach ($animaux as $animal): ?>
           <?php $idAnimal = (int)($animal['id_animal'] ?? 0); ?>
           <div class="animal-card">
-            <p class="animal-title">Animal #<?= $idAnimal ?> — <?= htmlspecialchars($animal['nom_animal'] ?? '') ?></p>
+            <?php
+              $especeAnimal = strtolower(trim((string)($animal['espece'] ?? '')));
+              $animalEmoji = '🐾';
+              if ($especeAnimal === 'chien') {
+                $animalEmoji = '🐶';
+              } elseif ($especeAnimal === 'chat') {
+                $animalEmoji = '🐱';
+              } elseif ($especeAnimal === 'lapin') {
+                $animalEmoji = '🐰';
+              }
+            ?>
+            <p class="animal-title"><?= $animalEmoji ?> <?= htmlspecialchars($animal['nom_animal'] ?? '') ?></p>
 
             <div class="form-row">
               <div>
