@@ -494,11 +494,7 @@
         </div>
     </div>
 
-    <div id="agenda-direct-date" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin: 0 0 12px 0; padding:10px 12px; background:#fff; border:1px solid #e2e8f0; border-radius:12px;">
-        <span id="agenda-direct-current" style="color:#0f172a; font-weight:800; cursor:pointer; text-decoration:underline; text-underline-offset:3px;" title="Cliquer pour choisir une date">📅 Aujourd'hui</span>
-        <input type="date" id="agenda-direct-date-input" class="search-input" style="max-width:220px; margin:0;">
-    </div>
-
+    <input type="date" id="agenda-toolbar-date-input" style="position:absolute; left:-9999px; opacity:0; pointer-events:none;" aria-hidden="true">
     <div id="calendar"></div>
     <p style="margin:10px 4px 0; color:#64748b; font-size:.85rem;">
         Astuce : activez <strong>Vacances: ON</strong> puis cliquez sur un jour pour le colorer. Recliquez pour l’enlever.
@@ -1004,10 +1000,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     vacationModeActive = !vacationModeActive;
                     updateVacationToggleButton();
                 }
+            },
+            jumpDate: {
+                text: '📅 Date',
+                click: function() {
+                    openAgendaDatePicker();
+                }
             }
         },
         headerToolbar: isPhone ? false : {
-            left: 'prev,next today vacationToggle',
+            left: 'prev,next today vacationToggle jumpDate',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
@@ -1054,10 +1056,7 @@ document.addEventListener('DOMContentLoaded', function() {
             renderHolidaySource(calendar, info.start, info.end);
             updateVacationToggleButton();
             bindDatePickerTriggers();
-            if (directDateInput) {
-                directDateInput.value = toIsoDate(calendar.getDate());
-            }
-            refreshDirectCurrentLabel();
+            updateJumpDateButtonLabel();
 
             if (!isPhone) {
                 return;
@@ -1133,8 +1132,7 @@ document.addEventListener('DOMContentLoaded', function() {
     renderVacationSource(calendar);
     updateVacationToggleButton();
 
-    var directDateInput = document.getElementById('agenda-direct-date-input');
-    var directCurrentLabel = document.getElementById('agenda-direct-current');
+    var toolbarDateInput = document.getElementById('agenda-toolbar-date-input');
 
     function toIsoDate(dateObj) {
         return dateObj.getFullYear() + '-' +
@@ -1148,17 +1146,20 @@ document.addEventListener('DOMContentLoaded', function() {
             dateObj.getFullYear();
     }
 
-    function refreshDirectCurrentLabel() {
-        if (!directCurrentLabel) return;
-        directCurrentLabel.textContent = '📅 ' + toFrenchDateShort(calendar.getDate());
+    function updateJumpDateButtonLabel() {
+        var btn = document.querySelector('.fc-jumpDate-button');
+        if (!btn) return;
+        btn.textContent = '📅 ' + toFrenchDateShort(calendar.getDate());
+        btn.title = 'Choisir une date';
     }
 
     function openAgendaDatePicker() {
-        if (!directDateInput) return;
-        directDateInput.value = toIsoDate(calendar.getDate());
-        directDateInput.focus();
-        if (typeof directDateInput.showPicker === 'function') {
-            directDateInput.showPicker();
+        if (!toolbarDateInput) return;
+        toolbarDateInput.value = toIsoDate(calendar.getDate());
+        if (typeof toolbarDateInput.showPicker === 'function') {
+            toolbarDateInput.showPicker();
+        } else {
+            toolbarDateInput.click();
         }
     }
 
@@ -1188,21 +1189,14 @@ document.addEventListener('DOMContentLoaded', function() {
         openAgendaDatePicker();
     });
 
-    if (directDateInput) {
-        directDateInput.value = toIsoDate(calendar.getDate());
-        directDateInput.addEventListener('change', function() {
-            if (!directDateInput.value) return;
-            calendar.gotoDate(directDateInput.value);
+    updateJumpDateButtonLabel();
+
+    if (toolbarDateInput) {
+        toolbarDateInput.addEventListener('change', function() {
+            if (!toolbarDateInput.value) return;
+            calendar.gotoDate(toolbarDateInput.value);
         });
     }
-
-    if (directCurrentLabel) {
-        directCurrentLabel.addEventListener('click', function() {
-            openAgendaDatePicker();
-        });
-    }
-
-    refreshDirectCurrentLabel();
 
     if (isPhone) {
         var btnPrev = document.getElementById('mobile-prev');
