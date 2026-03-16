@@ -494,6 +494,12 @@
         </div>
     </div>
 
+    <div id="agenda-direct-date" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin: 0 0 12px 0; padding:10px 12px; background:#fff; border:1px solid #e2e8f0; border-radius:12px;">
+        <strong style="color:#334155;">Aller au jour :</strong>
+        <input type="date" id="agenda-direct-date-input" class="search-input" style="max-width:220px; margin:0;">
+        <button type="button" id="agenda-direct-today" class="mobile-agenda-btn" style="min-height:38px;">Aujourd'hui</button>
+    </div>
+
     <div id="calendar"></div>
     <p style="margin:10px 4px 0; color:#64748b; font-size:.85rem;">
         Astuce : activez <strong>Vacances: ON</strong> puis cliquez sur un jour pour le colorer. Recliquez pour l’enlever.
@@ -605,24 +611,6 @@
 
             <button type="submit" class="btn-confirm">Enregistrer</button>
         </form>
-    </div>
-</div>
-
-<!-- Modal Aller à une date -->
-<div id="modalGotoDate" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,.55); z-index:10040; align-items:center; justify-content:center; padding:16px;">
-    <div style="background:#fff; width:min(420px, 96vw); border-radius:14px; box-shadow:0 20px 60px rgba(0,0,0,.2); padding:18px;">
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
-            <h3 style="margin:0; color:#1f2937; font-size:1.05rem;">📅 Aller à une date</h3>
-            <button type="button" id="goto-date-close" style="border:none; background:none; font-size:1.5rem; line-height:1; cursor:pointer; color:#64748b;">&times;</button>
-        </div>
-
-        <label for="goto-date-input" style="display:block; margin-bottom:8px; color:#334155; font-weight:600;">Choisir le jour</label>
-        <input type="date" id="goto-date-input" class="search-input" style="width:100%; margin-bottom:12px;">
-
-        <div style="display:flex; justify-content:flex-end; gap:8px;">
-            <button type="button" id="goto-date-cancel" class="btn-cancel" style="padding:10px 14px;">Annuler</button>
-            <button type="button" id="goto-date-apply" class="btn-confirm" style="padding:10px 14px;">Aller</button>
-        </div>
     </div>
 </div>
 
@@ -1073,6 +1061,9 @@ document.addEventListener('DOMContentLoaded', function() {
             renderHolidaySource(calendar, info.start, info.end);
             updateVacationToggleButton();
             bindDatePickerTriggers();
+            if (directDateInput) {
+                directDateInput.value = toIsoDate(calendar.getDate());
+            }
 
             if (!isPhone) {
                 return;
@@ -1148,11 +1139,8 @@ document.addEventListener('DOMContentLoaded', function() {
     renderVacationSource(calendar);
     updateVacationToggleButton();
 
-    var gotoModal = document.getElementById('modalGotoDate');
-    var gotoInput = document.getElementById('goto-date-input');
-    var gotoApply = document.getElementById('goto-date-apply');
-    var gotoClose = document.getElementById('goto-date-close');
-    var gotoCancel = document.getElementById('goto-date-cancel');
+    var directDateInput = document.getElementById('agenda-direct-date-input');
+    var directTodayBtn = document.getElementById('agenda-direct-today');
 
     function toIsoDate(dateObj) {
         return dateObj.getFullYear() + '-' +
@@ -1161,24 +1149,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function openAgendaDatePicker() {
-        if (!gotoModal || !gotoInput) return;
-        gotoInput.value = toIsoDate(calendar.getDate());
-        gotoModal.style.display = 'flex';
-        setTimeout(function() { gotoInput.focus(); }, 0);
-    }
-
-    function closeAgendaDatePicker() {
-        if (!gotoModal) return;
-        gotoModal.style.display = 'none';
-    }
-
-    function applyAgendaDatePicker() {
-        if (!gotoInput || !gotoInput.value) {
-            alert('Choisis une date.');
-            return;
+        if (!directDateInput) return;
+        directDateInput.value = toIsoDate(calendar.getDate());
+        directDateInput.focus();
+        if (typeof directDateInput.showPicker === 'function') {
+            directDateInput.showPicker();
         }
-        calendar.gotoDate(gotoInput.value);
-        closeAgendaDatePicker();
     }
 
     function bindDatePickerTriggers() {
@@ -1207,21 +1183,19 @@ document.addEventListener('DOMContentLoaded', function() {
         openAgendaDatePicker();
     });
 
-    if (gotoApply) gotoApply.addEventListener('click', applyAgendaDatePicker);
-    if (gotoClose) gotoClose.addEventListener('click', closeAgendaDatePicker);
-    if (gotoCancel) gotoCancel.addEventListener('click', closeAgendaDatePicker);
-    if (gotoInput) {
-        gotoInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                applyAgendaDatePicker();
-            }
+    if (directDateInput) {
+        directDateInput.value = toIsoDate(calendar.getDate());
+        directDateInput.addEventListener('change', function() {
+            if (!directDateInput.value) return;
+            calendar.gotoDate(directDateInput.value);
         });
     }
-    if (gotoModal) {
-        gotoModal.addEventListener('click', function(e) {
-            if (e.target === gotoModal) {
-                closeAgendaDatePicker();
+
+    if (directTodayBtn) {
+        directTodayBtn.addEventListener('click', function() {
+            calendar.today();
+            if (directDateInput) {
+                directDateInput.value = toIsoDate(calendar.getDate());
             }
         });
     }
