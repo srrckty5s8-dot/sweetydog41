@@ -994,6 +994,12 @@ document.addEventListener('DOMContentLoaded', function() {
         nowIndicator: true,
         eventDisplay: 'block',
         customButtons: {
+            goToDate: {
+                text: '📅 Choisir une date',
+                click: function() {
+                    openAgendaDatePicker();
+                }
+            },
             vacationToggle: {
                 text: 'Vacances: OFF',
                 click: function() {
@@ -1003,7 +1009,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         },
         headerToolbar: isPhone ? false : {
-            left: 'prev,next today vacationToggle',
+            left: 'prev,next today goToDate vacationToggle',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
@@ -1178,6 +1184,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     bindDatePickerTriggers();
+
+    // Sécurité: délégation globale (si FullCalendar rerender le titre)
+    document.addEventListener('click', function(e) {
+        var title = e.target.closest('.fc-toolbar-title');
+        if (!title) return;
+        e.preventDefault();
+        openAgendaDatePicker();
+    });
 
     if (agendaDatePicker) {
         agendaDatePicker.addEventListener('change', function () {
