@@ -67,6 +67,25 @@ class Animal
         ]);
     }
 
+    public static function updateComment(int $id, string $comment): bool
+    {
+        if ($id <= 0) {
+            return false;
+        }
+
+        $pdo = Database::getConnection();
+
+        $sql = "UPDATE Animaux
+                SET commentaire = :commentaire
+                WHERE id_animal = :id";
+
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute([
+            'commentaire' => $comment,
+            'id' => $id,
+        ]);
+    }
+
     public static function delete(int $id): bool
     {
         if ($id <= 0) {

@@ -123,6 +123,7 @@ return [
      * Affiche l'historique des soins pour cet animal
      */
     ['name' => 'animals.tracking', 'method' => 'GET', 'action' => 'AnimalController@tracking', 'pattern' => '/animals/{id}/tracking'],
+    ['name' => 'animals.comment', 'method' => 'POST', 'action' => 'AnimalController@updateComment', 'pattern' => '/animals/{id}/comment'],
 
     // ========== GESTION DES RENDEZ-VOUS ==========
     /**

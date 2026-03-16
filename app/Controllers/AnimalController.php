@@ -96,4 +96,45 @@ class AnimalController extends Controller
         $this->view('suivi_toilettage_view', compact('animal', 'historique', 'prochains_rdv'));
         exit;
     }
+
+    public function updateComment($id = 0)
+    {
+        $this->requireLogin();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        $id = (int)$id;
+        if ($id <= 0) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID animal invalide']);
+            exit;
+        }
+
+        $animal = Animal::findWithOwner($id);
+        if (!$animal) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'message' => 'Animal introuvable']);
+            exit;
+        }
+
+        $commentaire = trim((string)($_POST['commentaire'] ?? ''));
+
+        try {
+            $ok = Animal::updateComment($id, $commentaire);
+            if (!$ok) {
+                throw new RuntimeException('Échec de la sauvegarde');
+            }
+
+            echo json_encode(['success' => true]);
+        } catch (Throwable $e) {
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Impossible de sauvegarder le commentaire',
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        exit;
+    }
 }

@@ -112,6 +112,38 @@
             line-height: 1.1;
         }
         .history-table td[data-label="Actions"] .btn-email-invoice { margin-left: 0; }
+        .animal-comment-card {
+            background: #ffffff;
+            border: 1px solid #e8efe9;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 14px;
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+        }
+        .animal-comment-title {
+            margin: 0 0 8px 0;
+            color: #1f2937;
+            font-size: 1rem;
+        }
+        .animal-comment-input {
+            width: 100%;
+            border: 1px solid #dbe7df;
+            border-radius: 10px;
+            background: #f8faf9;
+            color: #1f2937;
+            padding: 10px 12px;
+            line-height: 1.45;
+            resize: vertical;
+            min-height: 88px;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+        .animal-comment-status {
+            margin-top: 8px;
+            min-height: 18px;
+            font-size: 0.82rem;
+            color: #64748b;
+        }
         .upcoming-rdv-card {
             background: #ffffff;
             border: 1px solid #e8efe9;
@@ -536,6 +568,17 @@
         </div>
     </div>
 
+    <div class="animal-comment-card">
+        <h3 class="animal-comment-title">💬 Commentaire</h3>
+        <textarea
+            id="animal-comment-input"
+            class="animal-comment-input"
+            placeholder="Écris un commentaire sur ce chien..."
+            autocomplete="off"
+        ><?= htmlspecialchars((string)($animal['commentaire'] ?? '')); ?></textarea>
+        <div id="animal-comment-status" class="animal-comment-status">Modifie le texte, la sauvegarde est automatique.</div>
+    </div>
+
     <div class="upcoming-rdv-card">
         <h3 class="upcoming-rdv-title">📅 Prochains rendez-vous</h3>
         <?php if (empty($prochains_rdv)): ?>
@@ -943,6 +986,80 @@
         div.textContent = str;
         return div.innerHTML;
     }
+})();
+</script>
+
+<script>
+(function () {
+    var input = document.getElementById('animal-comment-input');
+    var status = document.getElementById('animal-comment-status');
+    if (!input || !status) return;
+
+    var saveUrl = <?= json_encode(route('animals.comment', ['id' => (int)($animal['id_animal'] ?? 0)])); ?>;
+    var lastSavedValue = input.value;
+    var timer = null;
+    var requestId = 0;
+
+    function setStatus(text, color) {
+        status.textContent = text;
+        if (color) status.style.color = color;
+    }
+
+    async function saveComment(value) {
+        requestId += 1;
+        var currentRequest = requestId;
+
+        setStatus('Sauvegarde…', '#64748b');
+
+        try {
+            var body = new URLSearchParams();
+            body.append('commentaire', value);
+
+            var response = await fetch(saveUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: body.toString()
+            });
+
+            var payload = await response.json().catch(function () { return {}; });
+            if (currentRequest !== requestId) return;
+
+            if (!response.ok || !payload.success) {
+                throw new Error(payload.message || 'Erreur réseau');
+            }
+
+            lastSavedValue = value;
+            setStatus('✅ Commentaire enregistré', '#15803d');
+        } catch (err) {
+            if (currentRequest !== requestId) return;
+            setStatus('❌ Échec de sauvegarde — réessaie', '#b91c1c');
+        }
+    }
+
+    input.addEventListener('input', function () {
+        var nextValue = input.value;
+        setStatus('Modifications non enregistrées…', '#b45309');
+
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(function () {
+            if (nextValue === lastSavedValue) {
+                setStatus('✅ Déjà enregistré', '#15803d');
+                return;
+            }
+            saveComment(nextValue);
+        }, 450);
+    });
+
+    window.addEventListener('beforeunload', function () {
+        if (input.value === lastSavedValue) return;
+        navigator.sendBeacon(
+            saveUrl,
+            new URLSearchParams({ commentaire: input.value })
+        );
+    });
 })();
 </script>
 
