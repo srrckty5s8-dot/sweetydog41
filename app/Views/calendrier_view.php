@@ -494,7 +494,6 @@
         </div>
     </div>
 
-    <input type="date" id="agenda-date-picker" style="position:absolute; left:-9999px; opacity:0; pointer-events:none;" aria-hidden="true">
     <div id="calendar"></div>
     <p style="margin:10px 4px 0; color:#64748b; font-size:.85rem;">
         Astuce : activez <strong>Vacances: ON</strong> puis cliquez sur un jour pour le colorer. Recliquez pour l’enlever.
@@ -606,6 +605,24 @@
 
             <button type="submit" class="btn-confirm">Enregistrer</button>
         </form>
+    </div>
+</div>
+
+<!-- Modal Aller à une date -->
+<div id="modalGotoDate" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,.55); z-index:10040; align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#fff; width:min(420px, 96vw); border-radius:14px; box-shadow:0 20px 60px rgba(0,0,0,.2); padding:18px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
+            <h3 style="margin:0; color:#1f2937; font-size:1.05rem;">📅 Aller à une date</h3>
+            <button type="button" id="goto-date-close" style="border:none; background:none; font-size:1.5rem; line-height:1; cursor:pointer; color:#64748b;">&times;</button>
+        </div>
+
+        <label for="goto-date-input" style="display:block; margin-bottom:8px; color:#334155; font-weight:600;">Choisir le jour</label>
+        <input type="date" id="goto-date-input" class="search-input" style="width:100%; margin-bottom:12px;">
+
+        <div style="display:flex; justify-content:flex-end; gap:8px;">
+            <button type="button" id="goto-date-cancel" class="btn-cancel" style="padding:10px 14px;">Annuler</button>
+            <button type="button" id="goto-date-apply" class="btn-confirm" style="padding:10px 14px;">Aller</button>
+        </div>
     </div>
 </div>
 
@@ -1131,40 +1148,37 @@ document.addEventListener('DOMContentLoaded', function() {
     renderVacationSource(calendar);
     updateVacationToggleButton();
 
-    var agendaDatePicker = document.getElementById('agenda-date-picker');
+    var gotoModal = document.getElementById('modalGotoDate');
+    var gotoInput = document.getElementById('goto-date-input');
+    var gotoApply = document.getElementById('goto-date-apply');
+    var gotoClose = document.getElementById('goto-date-close');
+    var gotoCancel = document.getElementById('goto-date-cancel');
+
+    function toIsoDate(dateObj) {
+        return dateObj.getFullYear() + '-' +
+            String(dateObj.getMonth() + 1).padStart(2, '0') + '-' +
+            String(dateObj.getDate()).padStart(2, '0');
+    }
 
     function openAgendaDatePicker() {
-        var currentDate = calendar.getDate();
-        var isoCurrent =
-            currentDate.getFullYear() + '-' +
-            String(currentDate.getMonth() + 1).padStart(2, '0') + '-' +
-            String(currentDate.getDate()).padStart(2, '0');
+        if (!gotoModal || !gotoInput) return;
+        gotoInput.value = toIsoDate(calendar.getDate());
+        gotoModal.style.display = 'flex';
+        setTimeout(function() { gotoInput.focus(); }, 0);
+    }
 
-        if (agendaDatePicker && typeof agendaDatePicker.showPicker === 'function') {
-            agendaDatePicker.value = isoCurrent;
-            agendaDatePicker.showPicker();
+    function closeAgendaDatePicker() {
+        if (!gotoModal) return;
+        gotoModal.style.display = 'none';
+    }
+
+    function applyAgendaDatePicker() {
+        if (!gotoInput || !gotoInput.value) {
+            alert('Choisis une date.');
             return;
         }
-
-        // Fallback compatible Safari/Desktop : saisie manuelle
-        var frCurrent =
-            String(currentDate.getDate()).padStart(2, '0') + '/' +
-            String(currentDate.getMonth() + 1).padStart(2, '0') + '/' +
-            currentDate.getFullYear();
-        var input = window.prompt('Choisis une date (jj/mm/aaaa)', frCurrent);
-        if (!input) return;
-
-        var m = input.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-        if (!m) {
-            alert('Format invalide. Utilise jj/mm/aaaa');
-            return;
-        }
-
-        var dd = String(parseInt(m[1], 10)).padStart(2, '0');
-        var mm = String(parseInt(m[2], 10)).padStart(2, '0');
-        var yyyy = m[3];
-        var iso = yyyy + '-' + mm + '-' + dd;
-        calendar.gotoDate(iso);
+        calendar.gotoDate(gotoInput.value);
+        closeAgendaDatePicker();
     }
 
     function bindDatePickerTriggers() {
@@ -1193,10 +1207,22 @@ document.addEventListener('DOMContentLoaded', function() {
         openAgendaDatePicker();
     });
 
-    if (agendaDatePicker) {
-        agendaDatePicker.addEventListener('change', function () {
-            if (!agendaDatePicker.value) return;
-            calendar.gotoDate(agendaDatePicker.value);
+    if (gotoApply) gotoApply.addEventListener('click', applyAgendaDatePicker);
+    if (gotoClose) gotoClose.addEventListener('click', closeAgendaDatePicker);
+    if (gotoCancel) gotoCancel.addEventListener('click', closeAgendaDatePicker);
+    if (gotoInput) {
+        gotoInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                applyAgendaDatePicker();
+            }
+        });
+    }
+    if (gotoModal) {
+        gotoModal.addEventListener('click', function(e) {
+            if (e.target === gotoModal) {
+                closeAgendaDatePicker();
+            }
         });
     }
 
