@@ -1128,18 +1128,37 @@ document.addEventListener('DOMContentLoaded', function() {
     var agendaDatePicker = document.getElementById('agenda-date-picker');
 
     function openAgendaDatePicker() {
-        if (!agendaDatePicker) return;
         var currentDate = calendar.getDate();
-        agendaDatePicker.value =
+        var isoCurrent =
             currentDate.getFullYear() + '-' +
             String(currentDate.getMonth() + 1).padStart(2, '0') + '-' +
             String(currentDate.getDate()).padStart(2, '0');
 
-        if (typeof agendaDatePicker.showPicker === 'function') {
+        if (agendaDatePicker && typeof agendaDatePicker.showPicker === 'function') {
+            agendaDatePicker.value = isoCurrent;
             agendaDatePicker.showPicker();
-        } else {
-            agendaDatePicker.click();
+            return;
         }
+
+        // Fallback compatible Safari/Desktop : saisie manuelle
+        var frCurrent =
+            String(currentDate.getDate()).padStart(2, '0') + '/' +
+            String(currentDate.getMonth() + 1).padStart(2, '0') + '/' +
+            currentDate.getFullYear();
+        var input = window.prompt('Choisis une date (jj/mm/aaaa)', frCurrent);
+        if (!input) return;
+
+        var m = input.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (!m) {
+            alert('Format invalide. Utilise jj/mm/aaaa');
+            return;
+        }
+
+        var dd = String(parseInt(m[1], 10)).padStart(2, '0');
+        var mm = String(parseInt(m[2], 10)).padStart(2, '0');
+        var yyyy = m[3];
+        var iso = yyyy + '-' + mm + '-' + dd;
+        calendar.gotoDate(iso);
     }
 
     function bindDatePickerTriggers() {
