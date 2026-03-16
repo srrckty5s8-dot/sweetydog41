@@ -495,9 +495,8 @@
     </div>
 
     <div id="agenda-direct-date" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin: 0 0 12px 0; padding:10px 12px; background:#fff; border:1px solid #e2e8f0; border-radius:12px;">
-        <strong style="color:#334155;">Aller au jour :</strong>
+        <span id="agenda-direct-current" style="color:#0f172a; font-weight:800; cursor:pointer; text-decoration:underline; text-underline-offset:3px;" title="Cliquer pour choisir une date">📅 Aujourd'hui</span>
         <input type="date" id="agenda-direct-date-input" class="search-input" style="max-width:220px; margin:0;">
-        <button type="button" id="agenda-direct-today" class="mobile-agenda-btn" style="min-height:38px;">Aujourd'hui</button>
     </div>
 
     <div id="calendar"></div>
@@ -1058,6 +1057,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (directDateInput) {
                 directDateInput.value = toIsoDate(calendar.getDate());
             }
+            refreshDirectCurrentLabel();
 
             if (!isPhone) {
                 return;
@@ -1134,12 +1134,23 @@ document.addEventListener('DOMContentLoaded', function() {
     updateVacationToggleButton();
 
     var directDateInput = document.getElementById('agenda-direct-date-input');
-    var directTodayBtn = document.getElementById('agenda-direct-today');
+    var directCurrentLabel = document.getElementById('agenda-direct-current');
 
     function toIsoDate(dateObj) {
         return dateObj.getFullYear() + '-' +
             String(dateObj.getMonth() + 1).padStart(2, '0') + '-' +
             String(dateObj.getDate()).padStart(2, '0');
+    }
+
+    function toFrenchDateShort(dateObj) {
+        return String(dateObj.getDate()).padStart(2, '0') + '/' +
+            String(dateObj.getMonth() + 1).padStart(2, '0') + '/' +
+            dateObj.getFullYear();
+    }
+
+    function refreshDirectCurrentLabel() {
+        if (!directCurrentLabel) return;
+        directCurrentLabel.textContent = '📅 ' + toFrenchDateShort(calendar.getDate());
     }
 
     function openAgendaDatePicker() {
@@ -1185,14 +1196,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    if (directTodayBtn) {
-        directTodayBtn.addEventListener('click', function() {
-            calendar.today();
-            if (directDateInput) {
-                directDateInput.value = toIsoDate(calendar.getDate());
-            }
+    if (directCurrentLabel) {
+        directCurrentLabel.addEventListener('click', function() {
+            openAgendaDatePicker();
         });
     }
+
+    refreshDirectCurrentLabel();
 
     if (isPhone) {
         var btnPrev = document.getElementById('mobile-prev');
