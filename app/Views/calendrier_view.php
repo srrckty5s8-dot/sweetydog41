@@ -999,12 +999,6 @@ document.addEventListener('DOMContentLoaded', function() {
         nowIndicator: true,
         eventDisplay: 'block',
         customButtons: {
-            goToDate: {
-                text: '📅 Choisir une date',
-                click: function() {
-                    openAgendaDatePicker();
-                }
-            },
             vacationToggle: {
                 text: 'Vacances: OFF',
                 click: function() {
@@ -1014,7 +1008,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         },
         headerToolbar: isPhone ? false : {
-            left: 'prev,next today goToDate vacationToggle',
+            left: 'prev,next today vacationToggle',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
