@@ -40,6 +40,10 @@
             font-size: 1.1rem !important;
             font-weight: 700 !important;
             color: var(--vert-fonce) !important;
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-color: rgba(30, 64, 47, 0.25);
+            text-underline-offset: 4px;
         }
 
         .fc .fc-button {
@@ -369,6 +373,7 @@
                 font-weight: 800;
                 text-align: center;
                 padding: 0 8px;
+                cursor: pointer;
             }
 
             /* FullCalendar mobile */
@@ -489,6 +494,7 @@
         </div>
     </div>
 
+    <input type="date" id="agenda-date-picker" style="position:absolute; left:-9999px; opacity:0; pointer-events:none;" aria-hidden="true">
     <div id="calendar"></div>
     <p style="margin:10px 4px 0; color:#64748b; font-size:.85rem;">
         Astuce : activez <strong>Vacances: ON</strong> puis cliquez sur un jour pour le colorer. Recliquez pour l’enlever.
@@ -1043,6 +1049,7 @@ document.addEventListener('DOMContentLoaded', function() {
         datesSet: function(info) {
             renderHolidaySource(calendar, info.start, info.end);
             updateVacationToggleButton();
+            bindDatePickerTriggers();
 
             if (!isPhone) {
                 return;
@@ -1117,6 +1124,48 @@ document.addEventListener('DOMContentLoaded', function() {
     renderHolidaySource(calendar, calendar.view.currentStart, calendar.view.currentEnd);
     renderVacationSource(calendar);
     updateVacationToggleButton();
+
+    var agendaDatePicker = document.getElementById('agenda-date-picker');
+
+    function openAgendaDatePicker() {
+        if (!agendaDatePicker) return;
+        var currentDate = calendar.getDate();
+        agendaDatePicker.value =
+            currentDate.getFullYear() + '-' +
+            String(currentDate.getMonth() + 1).padStart(2, '0') + '-' +
+            String(currentDate.getDate()).padStart(2, '0');
+
+        if (typeof agendaDatePicker.showPicker === 'function') {
+            agendaDatePicker.showPicker();
+        } else {
+            agendaDatePicker.click();
+        }
+    }
+
+    function bindDatePickerTriggers() {
+        var title = document.querySelector('.fc .fc-toolbar-title');
+        if (title && !title.dataset.datePickerBound) {
+            title.dataset.datePickerBound = '1';
+            title.title = 'Cliquer pour choisir une date';
+            title.addEventListener('click', openAgendaDatePicker);
+        }
+
+        var mobileLabel = document.getElementById('mobile-current-label');
+        if (mobileLabel && !mobileLabel.dataset.datePickerBound) {
+            mobileLabel.dataset.datePickerBound = '1';
+            mobileLabel.title = 'Cliquer pour choisir une date';
+            mobileLabel.addEventListener('click', openAgendaDatePicker);
+        }
+    }
+
+    bindDatePickerTriggers();
+
+    if (agendaDatePicker) {
+        agendaDatePicker.addEventListener('change', function () {
+            if (!agendaDatePicker.value) return;
+            calendar.gotoDate(agendaDatePicker.value);
+        });
+    }
 
     if (isPhone) {
         var btnPrev = document.getElementById('mobile-prev');
